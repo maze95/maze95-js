@@ -2,17 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="./index.css">
     <title>Maze 95 JS</title>
+    <script type="module" src="./maze95.js"></script>
   </head>
   <body>
-    <h1 id="load">Awaiting map selection</h1>
+    <h1>Maze 95 JS</h1><br>
     <canvas id="bg"></canvas>
-    <script type="module" src="/maze95.js" onload='document.getElementById("load").innerHTML = "" '></script>
-    <h4>Maze 95</h4> <br>
-    <h4>Known Bugs:</h4> <br>
-    <p>Audio only works sometimes</p> <br>
-    <p>Collision is not implemented yet</p>
+    <h2>Known Bugs:</h2><br>
+    <p>
+      Collision is not implemented yet.
+      If you are experiencing audio issues make sure to allow autoplay in your browser settings.
+    </p> <br>
+    <h2>Special thanks to:</h2><br>
+    <a href="https://luphoria.github.io">luphoria</a><br>
+    <h2>Libraries used:</h2><br>
+    <p>three.js and keydrown</p>
   </body>
 </html>

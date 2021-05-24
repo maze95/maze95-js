@@ -1,20 +1,20 @@
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
-import { SelectedLVL } from "./levels/level_defines"
-import * as THREE from 'three'
-import "./node_modules/keydrown/dist/keydrown"
+import * as THREE from './lib/three.module.js'
+import { GLTFLoader } from "./lib/GLTFLoader.js"
+import { SelectedLVL } from "./levels/level_defines.js"
+import "./lib/keydrown.min.js"
 
-var width
-var height
+var width = 512
+var height = 384
 
 const widescreen = false //experimental
 
-if(widescreen == false) {
+if(widescreen == true) {
   width = innerWidth
   height = innerHeight
 }
 else {
-  width = 320
-  height = 224
+  width = 512
+  height = 384
 }
 
 //Scene & camera
@@ -41,7 +41,7 @@ const renderer = new THREE.WebGL1Renderer({
 //Canvas size parameters
 renderer.setPixelRatio(window.devicePixelRatio)
 if(widescreen == false) {
-  renderer.setSize(320, 224)
+  renderer.setSize(width, height)
 }
 else {
   renderer.setSize(window.innerWidth, window.innerHeight)

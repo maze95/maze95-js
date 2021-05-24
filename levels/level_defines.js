@@ -1,5 +1,5 @@
-import { maze_entry } from "./maze/script"
-import { redroom_entry } from "./redroom/script"
+import { maze_entry } from "./maze/script.js"
+import { redroom_entry } from "./redroom/script.js"
 
 function lvlEntry() {
     let select = prompt("Type level name\nmaze").toLowerCase()
@@ -9,6 +9,8 @@ function lvlEntry() {
             return maze_entry
         case "redroom":
             return redroom_entry
+        case null:
+            return maze_entry
         default:
             alert("Unknown level, going to maze.")
             return maze_entry
