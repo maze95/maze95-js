@@ -1,18 +1,25 @@
 import * as THREE from './lib/three.module.js'
-import { GLTFLoader } from "./lib/GLTFLoader.js"
+import { GLTFLoader } from "./lib/model_loader.js"
 import "./lib/keydrown.min.js"
 import { SelectedLVL } from "./levels/level_defines.js"
 import { move } from "./lib/player_col.js"
 import { rotateA, rotateD, moveW, moveS } from "./lib/player_no_col.js"
+import { widescreen } from "./lib/settings.js"
+import { width, height } from "./lib/settings.js"
+import "./lib/settings.js"
 
 import { faceObj } from "./lib/object_defines.js"
 import { startObj } from "./lib/object_defines.js"
 
-//Canvas width and height to set if widescreen is set to false
-var width = 512
-var height = 384
-
 const scene = new THREE.Scene()
+window.spooky = false
+
+function fog(color, near, far) {
+  scene.fog = new THREE.Fog(color, near, far);
+}
+function unfog() {
+  scene.fog = null
+}
 const camera = new THREE.PerspectiveCamera(60,width/height)
 
 let green = new THREE.MeshBasicMaterial({color: 0x248000})
@@ -22,6 +29,19 @@ let dir = new THREE.Vector3()
 var spd = 0
 window.spd = 0
 window.rotDiv = 17
+let clock = new THREE.Clock
+let gameStarted = false
+
+if(!window.ceilingTexName == "ceiling.png") {
+  console.log("Custom ceiling texture detected")
+}
+if(!window.floorTexName == "floor.png") {
+  console.log("Custom floor texture detected")
+}
+if(!window.texturePath == "./textures/") {
+  console.log("Custom texture path detected")
+}
+
 const playergeo = new THREE.BoxGeometry(3,3,3)
 export const player = new THREE.Mesh(playergeo,green)
 
@@ -29,9 +49,8 @@ var startLis = document.getElementById("start")
 
 scene.add(player)
 scene.add(camera)
-const widescreen = false //Experimental
 
-const ceilingTex = new THREE.TextureLoader().load("./textures/ceiling.png", function ( texture ) {
+const ceilingTex = new THREE.TextureLoader().load(`${texturePath}${window.ceilingTexName}`, function ( texture ) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,0)
   texture.repeat.set(40,30)
@@ -39,7 +58,7 @@ const ceilingTex = new THREE.TextureLoader().load("./textures/ceiling.png", func
 ceilingTex.magFilter = THREE.NearestFilter
 const ceilingMat = new THREE.MeshBasicMaterial({map: ceilingTex})
 
-const floorTex = new THREE.TextureLoader().load("./textures/floor.png", function ( texture ) {
+const floorTex = new THREE.TextureLoader().load(`${texturePath}${window.floorTexName}`, function ( texture ) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,0)
   texture.repeat.set(20,20)
@@ -88,10 +107,9 @@ if(widescreen) {
   width = innerWidth
   height = innerHeight
 }
-else {
-  width = 512
-  height = 384
-}
+
+var mixer
+var action
 
 //Dynamic scaling for widescreen
 window.addEventListener('resize', () =>
@@ -112,10 +130,29 @@ window.addEventListener('resize', () =>
   }
 })
 
+function loadModel() {
+  var loader = new GLTFLoader();
+  loader.load(SelectedLVL("lvlDir"), function (gltf) {
+  mixer = new THREE.AnimationMixer(gltf.scene)
+
+  action = mixer.clipAction(gltf.animations[ 0 ])
+  action.setLoop(THREE.LoopOnce)
+  action.clampWhenFinished = true
+  action.enable = true
+  action.play()
+  action.play().reset()
+  window.spd = 0.9
+  spd = window.spd
+
+  scene.add(gltf.scene)
+  gltf.scene.position.y = 8
+  })
+}
+
 startLis.onclick = function startGame() {
   document.getElementById("start").disabled = true
-  window.spd = 0.9
-  spd = 0.9
+
+  loadModel()
   loadMap()
 }
 
@@ -125,13 +162,18 @@ resetButton.onclick = function resetGame() {
   location.reload()
 }
 
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
 function loadMap() {
-  const loader = new GLTFLoader();
-  loader.load(SelectedLVL("lvlDir"), function (gltf) {
-  	scene.add(gltf.scene)
-  })
   floor.position.set(0,-18,-215)
   ceiling.position.set(0,12,-215)
+  player.position.z = -23
   scene.add(ceiling)
   scene.add(floor)
   scene.add(faceObj)
@@ -139,7 +181,10 @@ function loadMap() {
 
   const amb = new THREE.AmbientLight(0xffffff, SelectedLVL("ambLightIntensity"))
   scene.add(amb)
+  gameStarted = true
+  
 }
+
 function redraw() {
   requestAnimationFrame(redraw)
   player.getWorldDirection(dir)
@@ -150,6 +195,16 @@ function redraw() {
   spd = window.spd
   faceObj.rotation.y = player.rotation.y
   startObj.rotation.y = player.rotation.y
+
+  if(spooky) {
+    fog(0x0000, 5, 50)
+  }
+  else {
+    unfog()
+  }
+
+	var delta = clock.getDelta()
+	if (mixer) mixer.update(delta)
 
   renderer.render(scene, camera)
 }
