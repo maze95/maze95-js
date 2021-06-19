@@ -21,9 +21,8 @@ a {
     font-size: 20px;
 }
 
-label {
+label, p {
     font-size: 20px;
-    color: deepskyblue;
 }
 
 button {
@@ -35,6 +34,10 @@ button {
     font-family: 'ms-sans-serif';
 }
 
+#reset {
+    font-size: 17px;
+}
+
 select {
     background-image: url("textures/button.png");
     -webkit-background-size: cover;
@@ -44,13 +47,36 @@ select {
     font-family: 'ms-sans-serif';
 }
 
-/* Hide scrollbar for Chrome, Safari and Opera */
-.example::-webkit-scrollbar {
-    display: none;
-  }
-  
-  /* Hide scrollbar for IE, Edge and Firefox */
-  .example {
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-  }
+.gameCanvas {
+    position: relative;
+}
+
+#title {
+    position: absolute;
+    top: 60px;
+    left: 60px;
+    font-size: 30px;
+    color: white;
+}
+
+#game {
+    border: 50px solid rgb(192, 192, 192)
+}
+
+#header {
+    font-size: 30px;
+}
+
+#classicstart {
+    position: absolute;
+    top: 120px;
+    left: 60px;
+    font-size: 20px;
+}
+
+#storystart {
+    position: absolute;
+    top: 170px;
+    left: 60px;
+    font-size: 20px;
+}

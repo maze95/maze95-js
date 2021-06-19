@@ -16,21 +16,29 @@
   </head>
   <body>
     <h1>Maze 95 JS</h1><br>
-    <button onclick="startGame()" id="start">Start Game</button><br>
     <button onclick="resetGame()" id="reset">Reset Game</button><br>
-    <canvas id="bg"></canvas>
-    <label type="text">Select Level:</label>
-    <select id="lvlSel">
+    <div class="gameCanvas">
+      <canvas id="game"></canvas>
+      <div id="title">Maze 95 JS</div>
+      <button onclick="startGame()" id="classicstart">Classic Mode</button>
+      <button id="storystart">Story Mode</button>
+    </div>
+    <label hidden type="text">Select Level:</label>
+    <select hidden id="lvlSel">
       <option value="maze">Maze</option>
-    </select>
+      <option hidden value="bigroom">Big Room (Inspect element moment)</option>
+    </select hidden>
     <h2>Known Bugs:</h2><br>
     <p>Collision is not fully implemented yet.</p><br>
+    <p>The Title Screen now has music however there is a policy where audio cannot autoplay thus requiring you to enable autoplay on this page.</p>
     <h2>Special Thanks To:</h2><br>
-    <a href="https://luphoria.com">luphoria's Website</a><br>
+    <a href="https://luphoria.com/nmjs/index.html">luphoria's Namco Museum JS for inspiration & Three.js grasping</a><br>
     <h2>
       Libraries used:<br />
       Three.js<br />
-      Keydrown
+      Keydrown<br>
     </h2>
+    <h2 id="header">What is this?</h2>
+    <p>Maze 95 JS or maze95-js is a recreation of the Windows 95 3D Maze screensaver in the form of a playable web game.</p>
   </body>
 </html>
