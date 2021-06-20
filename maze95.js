@@ -5,11 +5,15 @@ import { SelectedLVL } from "./levels/level_defines.js"
 import { move } from "./lib/player_col.js"
 import { rotateA, rotateD, moveW, moveS } from "./lib/player_no_col.js"
 import { widescreen } from "./lib/settings.js"
-import { width, height } from "./lib/settings.js"
 import "./lib/settings.js"
 
 import { faceObj } from "./lib/object_defines.js"
 import { startObj } from "./lib/object_defines.js"
+
+var width = 512
+var height = 384
+
+const gameCanvas = document.getElementById("game")
 
 const win95teal = new THREE.Color(0x018281)
 const black = new THREE.Color(0x000000)
@@ -74,8 +78,8 @@ titleCube.position.z = -30
 titleCube.position.x = 7
 titleCube.rotation.y = 0.45
 
-var classicstartLis = document.getElementById("classicstart")
-var storystartLis = document.getElementById("storystart")
+const classicstartLis = document.getElementById("classicstart")
+const storystartLis = document.getElementById("storystart")
 storystartLis.disabled = true
 console.log("Story Mode unimplemented")
 
@@ -146,8 +150,7 @@ var mixer
 var action
 
 //Dynamic scaling for widescreen
-window.addEventListener('resize', () =>
-{
+window.addEventListener('resize', () => {
   if(widescreen)
   {
     // Update sizes
@@ -161,6 +164,8 @@ window.addEventListener('resize', () =>
     // Update renderer
     renderer.setSize(widesizes.width, widesizes.height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    gameCanvas.width = window.innerWidth
+    gameCanvas.height = window.innerHeight
   }
 })
 

@@ -21,7 +21,8 @@ a {
     font-size: 20px;
 }
 
-label, p {
+label, p, pre {
+    font-family: 'ms-sans-serif';
     font-size: 20px;
 }
 
@@ -34,7 +35,7 @@ button {
     font-family: 'ms-sans-serif';
 }
 
-#reset {
+#reset, #fullscreenbtn {
     font-size: 17px;
 }
 
