@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="./index.css">
     <title>Maze 95 JS</title>
-    <script type="module" src="./maze95.js"></script>
+    <script type="module" src="./index.js"></script>
     <meta content="Maze 95 JS" property="og:title">
     <meta content="Recreation of the Windows 95 3D Maze screensaver but interactive as a game, it is in it's very early development stages and only the maze map is meant for testing model loading and is not final.">
     <meta content="https://agent-11.github.io/projects/maze95-js/" property="og:url">
@@ -15,19 +15,20 @@
     <meta content="#941d15" data-react-helmet="true" name="theme-color">
   </head>
   <body>
-    <h1>Maze 95 JS</h1><br>
+    <h1>Maze 95 JS - Dev</h1><br>
     <button onclick="resetGame()" id="reset">Reset Game</button><br>
     <div class="gameCanvas">
       <canvas id="game"></canvas>
-      <div id="title">Maze 95 JS</div>
-      <button onclick="startGame()" id="classicstart">Classic Mode</button>
-      <button id="storystart">Story Mode</button>
+      <div hidden id="title">Maze 95 JS</div>
+      <button hidden onclick="startGame()" id="classicstart">Classic Mode</button>
+      <button hidden id="storystart">Story Mode</button>
     </div>
     <label hidden type="text">Select Level:</label>
     <select hidden id="lvlSel">
       <option value="maze">Maze</option>
       <option hidden value="bigroom">Big Room (Inspect element moment)</option>
     </select hidden>
+    <h1 style="color:lime" id="numberonline">Players online: ?</h1>
     <h2>Known Bugs:</h2><br>
     <pre>
       Collision is not fully implemented yet.

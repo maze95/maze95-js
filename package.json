@@ -1,0 +1,37 @@
+{
+  "name": "maze95-js",
+  "version": "0.7.1",
+  "description": "Windows 95 Maze screensaver as a playable game reimagined in three.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "snowpack dev",
+    "dev": "snowpack dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agent-11/maze95-js.git"
+  },
+  "keywords": [
+    "game",
+    "threejs",
+    "js",
+    "rewrite",
+    "recreation",
+    "nostalgia-project"
+  ],
+  "author": "Agent-11",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Agent-11/maze95-js/issues"
+  },
+  "homepage": "https://github.com/Agent-11/maze95-js#readme",
+  "dependencies": {
+    "event-emitter-es6": "^1.1.5",
+    "socket.io-client": "^4.1.2"
+  },
+  "devDependencies": {
+    "snowpack": "^3.7.1"
+  }
+}
