@@ -21,15 +21,58 @@ window.spooky = false
 let gameStarted = false
 window.spd = 0
 
+const playerDecelMovement = 0.75
+const playerDecelTurning = 0.75
+let playerVel = [0.0, 0.0, 0.0] /*X,Z,Turning*/
+window.pv = () => {return playerVel}
 //Colors
 const win95teal = new THREE.Color(0x018281)
 const black = new THREE.Color(0x000000)
 export const green = new THREE.Color(0x248000)
 
 //Player properties
-export const playerGeo = new THREE.CylinderGeometry(10,10,30)
-const playerTex = new THREE.TextureLoader().load("./textures/playertex.png")
-export const playerMat = new THREE.MeshBasicMaterial({map: playerTex})
+export const playerGeo = () => {return new THREE.BoxGeometry(25,38,0)} //new THREE.CylinderGeometry(10,10,30)
+
+export const quickLoadTexture = (texturePath, texOpacity = 1.0) => { /* Helps keep the table below from taking up a ton of lines. */
+	const texture_loaded = new THREE.TextureLoader().load(`./textures/${texturePath}.png`)
+	texture_loaded.magFilter = THREE.NearestFilter
+	return new THREE.MeshStandardMaterial({map: texture_loaded, transparent: true, opacity: texOpacity})
+}
+
+export const playerRotSprites = { /* You can probably guess what this is for. */
+	"_0" : quickLoadTexture("xenle_sprites/0001"),
+	"_1" : quickLoadTexture("xenle_sprites/0002"),
+	"_2" : quickLoadTexture("xenle_sprites/0003"),
+	"_3" : quickLoadTexture("xenle_sprites/0004"),
+	"_4" : quickLoadTexture("xenle_sprites/0005"),
+	"_5" : quickLoadTexture("xenle_sprites/0006"),
+	"_6" : quickLoadTexture("xenle_sprites/0007"),
+	"_7" : quickLoadTexture("xenle_sprites/0008")	
+}
+
+// Doom-like player sprite calc stuff
+
+export const raw_looppoint = 6.30
+export const sprite_offset = 4
+/*This is used to remap raw angles to a workable value.*/
+export const remapAngle = (angle) => {
+  return angle + (angle < 0.0 ? raw_looppoint : (angle > raw_looppoint ? -raw_looppoint : 0.0))
+}
+/*Convert raw angle to readable for math.*/
+export const convertRaw2Read = (angle) => {
+  return (remapAngle(angle)/(raw_looppoint/360))%360
+}
+/*Convert readable angle to raw for math. Only here incase you need to make a quick fix to this function.*/
+export const convertRead2Raw = (angle) => {
+  return remapAngle(angle*(raw_looppoint/360))
+}
+/*convert raw ang to sprite id. this will return a number from 0 to 7, and assumes that in order the sprites are first facing front, then adding 45 deg until it loops.*/
+/*tl;dr If the player angle is the same as the camera angle the player will be facing away, store sprites in a list with the order based on filename. this returns index.*/
+export const playerSpriteFromRot = (playerRot, cameraRot) => {
+  const player_rotation = convertRaw2Read(playerRot-cameraRot)
+  return `_${((sprite_offset+(Math.round(player_rotation/45)))%8)}` /*add 4, this is because if the player rot is the same as the camera rot then the player should be FACING AWAY.*/
+}
+
 
 //Disable Story Mode button as it does nothing
 document.getElementById("storystart").disabled = true
@@ -59,7 +102,9 @@ gameScene.scene.background = win95teal
 //Some client-server properties
 let id
 let instances = []
-let clients = new Object()
+export const clients = new Object()
+window.clientInitialized = false
+function clients_initialized () {return window.clientInitialized}
 
 //Cube on title screen
 const titleCubeGeo = new THREE.BoxGeometry(15,15,15)
@@ -106,7 +151,7 @@ function loadMap() {
   gameScene.scene.add(gameScene.floor)
   gameScene.scene.add(faceObj)
   gameScene.scene.add(startObj)
-  window.spd = 0.9
+  window.spd = 1.5
   gameStarted = true
 }
 
@@ -144,7 +189,8 @@ document.getElementById("classicstart").onclick = function startGame() {
 
 //On moved
 gameScene.on('userMoved', ()=>{
-  socket.emit('move', [gameScene.player.position.x, gameScene.player.position.y, gameScene.player.position.z]);
+  socket.emit('move', {"pos":[gameScene.player.position.x, gameScene.player.position.y, gameScene.player.position.z],"rot":[gameScene.player.rotation.x, remapAngle(gameScene.player.rotation.y), gameScene.player.rotation.z]})
+
 })
 
 //On connection server sends the client their ID
@@ -154,9 +200,10 @@ socket.on('introduction', (_id, _clientNum, _ids)=>{
     if(_ids[i] != _id){
       clients[_ids[i]] = {
         mesh: new THREE.Mesh(
-          playerGeo,
-          playerMat
-        )
+          playerGeo(),
+          quickLoadTexture("xenle_sprites/0001")
+        ),
+		rot: 0.0
       }
 
       //Add initial users to the scene
@@ -169,6 +216,8 @@ socket.on('introduction', (_id, _clientNum, _ids)=>{
   id = _id
   console.log(`Client ID is ${id}`)
 
+
+  window.clientInitialized = true
 })
 
 //Run when a new user has connected to the server
@@ -185,14 +234,15 @@ socket.on('newUserConnected', (clientCount, _id, _ids)=>{
     console.log('A new user connected with the id: ' + _id)
     clients[_id] = {
       mesh: new THREE.Mesh(
-        playerGeo,
-        playerMat
-      )
+          playerGeo(),
+          quickLoadTexture("xenle_sprites/0001")
+      ),
+	  rot: 0.0
     }
 
     //Add initial users to the scene
     gameScene.scene.add(clients[_id].mesh)
-    clients[_id].mesh.position.y = -10
+    clients[_id].mesh.position.y = -7//-10
     clients[_id].mesh.position.z = -23
   }
 
@@ -218,44 +268,31 @@ socket.on('userPositions', _clientProps =>{
   // console.log(Object.keys(_clientProps)[0] == id)
   for(let i = 0; i < Object.keys(_clientProps).length; i++){
     if(Object.keys(_clientProps)[i] != id){
-
-      //Store the values
-      let oldPos = clients[Object.keys(_clientProps)[i]].mesh.position
       let newPos = _clientProps[Object.keys(_clientProps)[i]].position
-
-      //Create a vector 3 and lerp the new values with the old values
-      let lerpedPos = new THREE.Vector3()
-      lerpedPos.x = THREE.Math.lerp(oldPos.x, newPos[0], 0.3)
-      lerpedPos.y = THREE.Math.lerp(oldPos.y, newPos[1], 0.3)
-      lerpedPos.z = THREE.Math.lerp(oldPos.z, newPos[2], 0.3)
-
-      //Set the position
-      clients[Object.keys(_clientProps)[i]].mesh.position.set(lerpedPos.x, lerpedPos.y, lerpedPos.z)
+	  
+      clients[Object.keys(_clientProps)[i]].mesh.position.set(newPos[0], newPos[1], newPos[2])
+	  clients[Object.keys(_clientProps)[i]].rot = _clientProps[Object.keys(_clientProps)[i]].rotation[1]
     }
   }
 })
 
 //Move functions
 function rotateD(speed) {
-  gameScene.player.rotation.y -= speed
-  socket.emit('move', [gameScene.player.position.x, gameScene.player.position.y, gameScene.player.position.z])
+  playerVel[2] -= speed
 }
 
 function rotateA(speed) {
-  gameScene.player.rotation.y += speed
-  socket.emit('move', [gameScene.player.position.x, gameScene.player.position.y, gameScene.player.position.z])
+  playerVel[2] += speed
 }
 
 function moveW(speed) {
-  gameScene.player.position.x += -Math.sin(gameScene.player.rotation.y) * speed
-  gameScene.player.position.z += -Math.cos(gameScene.player.rotation.y) * speed
-  socket.emit('move', [gameScene.player.position.x, gameScene.player.position.y, gameScene.player.position.z])
+  playerVel[0] += (-Math.sin(gameScene.player.rotation.y) * speed)/4 //X
+  playerVel[1] += (-Math.cos(gameScene.player.rotation.y) * speed)/4 //Z
 }
 
 function moveS(speed) {
-  gameScene.player.position.x -= -Math.sin(gameScene.player.rotation.y) * speed
-  gameScene.player.position.z -= -Math.cos(gameScene.player.rotation.y) * speed
-  socket.emit('move', [gameScene.player.position.x, gameScene.player.position.y, gameScene.player.position.z])
+  playerVel[0] -= (-Math.sin(gameScene.player.rotation.y) * speed)/4 //X
+  playerVel[1] -= (-Math.cos(gameScene.player.rotation.y) * speed)/4 //Z
 }
 
 kd.W.down(function(){moveW(window.spd)})
@@ -264,3 +301,33 @@ kd.S.down(function(){moveS(window.spd)})
 kd.D.down(function(){rotateD(window.spd/window.rotDiv)})
 
 kd.run(function(){kd.tick()})
+
+function updatePlayerSprites () {
+		for(let i = 0; i < Object.keys(clients).length; i++){
+			if(clients[Object.keys(clients)[i]] != null){
+				clients[Object.keys(clients)[i]].mesh.rotation.set(gameScene.player.rotation.x, gameScene.player.rotation.y, gameScene.player.rotation.z)
+				clients[Object.keys(clients)[i]].mesh.material.map = playerRotSprites[playerSpriteFromRot(clients[Object.keys(clients)[i]].rot, remapAngle(gameScene.player.rotation.y))].map
+				clients[Object.keys(clients)[i]].mesh.material.needsUpdate = true
+			}
+		}
+}
+function updatePlayerSpeeds (player) {
+	playerVel[0] *= playerDecelMovement;
+	playerVel[1] *= playerDecelMovement;
+	playerVel[2] *= playerDecelTurning;
+	if (playerVel[0] > window.spd) playerVel[0] = window.spd
+	if (playerVel[1] > window.spd) playerVel[1] = window.spd
+	if (playerVel[2] > window.spd/window.rotDiv) playerVel[2] = window.spd/window.rotDiv
+	if (playerVel[0] < -window.spd) playerVel[0] = -window.spd
+	if (playerVel[1] < -window.spd) playerVel[1] = -window.spd
+	if (playerVel[2] < -window.spd/window.rotDiv) playerVel[2] = -window.spd/window.rotDiv
+	player.position.x += playerVel[0]
+	player.position.z += playerVel[1]
+	player.rotation.y += playerVel[2]
+    player.rotation.y = remapAngle(player.rotation.y)
+	if (playerVel[0] != 0.0 ||
+	playerVel[1] != 0.0 ||
+	playerVel[2] != 0.0) {socket.emit('move', {"pos":[player.position.x, player.position.y, player.position.z],"rot":[player.rotation.x, remapAngle(player.rotation.y), player.rotation.z]})}
+	document.title = `Maze 95 JS - ${Math.round(playerVel[0])}, ${Math.round(playerVel[1])}`
+}
+export {updatePlayerSprites, clients_initialized, updatePlayerSpeeds}

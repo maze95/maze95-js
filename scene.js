@@ -2,7 +2,7 @@ import * as THREE from './lib/three.module.js'
 import EventEmitter from 'event-emitter-es6'
 
 //Misc imports
-import { mixer, playerGeo, playerMat } from "./maze95.js"
+import { mixer, playerGeo, quickLoadTexture, updatePlayerSprites,updatePlayerSpeeds,clients_initialized } from "./maze95.js"
 import { SelectedLVL } from "./levels/level_defines.js"
 import "./lib/settings.js"
 import { faceObj, startObj } from './lib/object_defines.js'
@@ -26,9 +26,9 @@ class Scene extends EventEmitter {
     this.camera = new THREE.PerspectiveCamera(60, this.width / this.height, 0.1, 1000)
 
     //Player object
-    this.player = new THREE.Mesh(playerGeo, playerMat)
+    this.player = new THREE.Mesh(playerGeo(), quickLoadTexture("xenle_sprites/0001"))
     this.scene.add(this.player)
-    this.player.position.y = -10
+    this.player.position.y = -7//10
     this.player.position.z = -23
 
     //THREE WebGL renderer
@@ -91,6 +91,8 @@ class Scene extends EventEmitter {
 
   update(){
     requestAnimationFrame(() => this.update())
+	if (clients_initialized()) updatePlayerSpeeds(this.player)
+		
     this.camera.position.x = this.player.position.x
     //this.camera.position.y = this.player.position.y
     this.camera.position.z = this.player.position.z
@@ -99,7 +101,9 @@ class Scene extends EventEmitter {
     //Billboards
     startObj.rotation.y = this.player.rotation.y
     faceObj.rotation.y = this.player.rotation.y
-
+	
+	if (clients_initialized()) updatePlayerSprites()
+	
     if(mixer) mixer.update(this.delta)
 
     this.render()
