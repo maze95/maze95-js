@@ -5,7 +5,5 @@ This is a reimagined version of the non interactive classic Windows 95 3D Maze s
 Maze map that is near identical to the original generation of the maze, I have found a maze generator addon for Blender that significantly makes my life easier, movement is fully implemented with an unused player with working collision however it is quite difficult to setup especially with collision boxes, you can press [L] on your keyboard to log your position and Y rotation in the console.
 
 # Bugs
-TODO: Stop player until walls rise animation is finished and collision of course
-
-# Trello TODO Board
-It is a work in progress board, you can visit it at https://trello.com/b/JXeOYBUz/maze-95-js
+Start logo vanishing at some angles
+Prevent player movement until maze rising animation has finished.
