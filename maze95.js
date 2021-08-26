@@ -2,51 +2,77 @@ import * as THREE from './lib/three.module.js'
 import { GLTFLoader } from "./lib/model_loader.js"
 import "./lib/keydrown.min.js"
 import { SelectedLVL } from "./levels/level_defines.js"
-import * as player from "./lib/player.js"
 import { widescreen, collisionMat } from "./lib/settings.js"
 import "./lib/settings.js"
 
 import { faceObj } from "./lib/object_defines.js"
 import { startObj } from "./lib/object_defines.js"
-import { checkCollision } from './lib/surface.js'
+import { collisionCheck } from './lib/surface.js'
 
-var width = 512
-var height = 384
+let width = 512
+let height = 384
+
+const renderer = new THREE.WebGL1Renderer({
+  canvas: document.querySelector('#game'),
+  antialias: false
+})
+
+/*if (/\bCrOS\b/.test(navigator.userAgent)) {
+  renderer.setPixelRatio(window.devicePixelRatio / 14) //The ultimate troll for chromebook users lmao
+} else {
+  renderer.setPixelRatio(window.devicePixelRatio)
+}*/
+renderer.setPixelRatio(window.devicePixelRatio)
+if (widescreen) {
+  renderer.setSize(window.innerWidth, window.innerHeight)
+} else {
+  renderer.setSize(width, height)
+}
+//Dynamic scaling for widescreen
+window.addEventListener('resize', () =>
+{
+  if (widescreen) {
+    // Update sizes
+    const widewidth = window.innerWidth
+    const wideheight = window.innerHeight
+
+      // Update camera
+    camera.aspect = width / height
+    camera.updateProjectionMatrix()
+
+      // Update renderer
+    renderer.setSize(widewidth, wideheight)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  }
+})
+
+const invisible = new THREE.MeshBasicMaterial({color: 0x248000, /*transparent: true,*/ opacity: 0})
+
+let clock = new THREE.Clock()
+let gameStarted = false
+let inMaze = true //I am planning to have a pool of maze levels that an rng determines, this value is for knowing if the player is in a maze level or bigroom due to bigroom not having any animations to play.
+let dir = new THREE.Vector3() //Player direction
+window.spd
+window.rotDiv = 20
+
+export const scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera(60,width/height)
+
+const playerGeo = new THREE.BoxGeometry(3,3,3)
+export const player = new THREE.Mesh(playerGeo, invisible)
+
+scene.add(player)
+scene.add(camera)
 
 let collisionVisible = false
-
 window.showCollision = function() {
   collisionVisible = !collisionVisible
   if (collisionVisible) {
-    collisionMat.opacity = 1
+    collisionMat.opacity = 0.9
   } else {
     collisionMat.opacity = 0
   }
 }
-
-const gameCanvas = document.getElementById("game")
-
-const win95teal = new THREE.Color(0x018281)
-const black = new THREE.Color(0x000000)
-const red = new THREE.MeshBasicMaterial({color: 0xfc0303})
-const invisible = new THREE.MeshBasicMaterial({color: 0x248000, transparent: true, opacity: 0})
-
-export const scene = new THREE.Scene()
-
-const camera = new THREE.PerspectiveCamera(60,width/height)
-
-window.spd
-window.rotDiv = 20
-
-let clock = new THREE.Clock()
-let gameStarted = false
-let inMaze = true //I am planning to have a pool of maze levels that a random number generator's output determines, this value is for knowing if the player is in a maze level or bigroom due to the model loading function also needing to load in animations which bigroom does not have.
-
-const playerGeo = new THREE.BoxGeometry(3,3,3)
-export const playerObj = new THREE.Mesh(playerGeo, invisible)
-
-scene.add(playerObj)
-scene.add(camera)
 
 const ceilingTex = new THREE.TextureLoader().load("./textures/ceiling.png", function ( texture ) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
@@ -73,49 +99,9 @@ const ceiling = new THREE.Mesh(
   ceilingMat
 )
 
-function playMusic() {
-  if (SelectedLVL("lvlMus") != "mus_none") {
-    let mus = new Audio('./audio/' + SelectedLVL("lvlMus") + '.mp3')
-    mus.addEventListener('ended', function() { // Thanks @kingjeffrey on stackoverflow for FF loop support!
-      this.currentTime = 0
-      this.play()
-    }, false)
-    mus.play()
-  }
-}
-
-const renderer = new THREE.WebGL1Renderer({
-  canvas: document.querySelector('#game'),
-})
-
-renderer.setPixelRatio(window.devicePixelRatio)
-if (widescreen) {
-  renderer.setSize(window.innerWidth, window.innerHeight)
-} else {
-  renderer.setSize(width, height)
-}
-
-var mixer
-var action
-
-//Dynamic scaling for widescreen
-window.addEventListener('resize', () =>
-{
-  if (widescreen) {
-    // Update sizes
-    const widewidth = window.innerWidth
-    const wideheight = window.innerHeight
-
-      // Update camera
-    camera.aspect = width / height
-    camera.updateProjectionMatrix()
-
-      // Update renderer
-    renderer.setSize(widewidth, wideheight)
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-  }
-})
-
+let amb
+let mixer
+let action
 function loadModel() { //Loads in the maze 3D model
   var loader = new GLTFLoader();
   loader.load(SelectedLVL("lvlDir"), function (gltf) {
@@ -141,13 +127,11 @@ function loadModel() { //Loads in the maze 3D model
   window.spd = 0.95 //Easter egg if you're looking here
 }
 
-let amb
-
 function loadMap() { //Sets the properties to begin the game
   floor.position.set(0,-18,-215)
   ceiling.position.set(0,12,-215)
-  playerObj.position.y = -3
-  playerObj.position.z = -23
+  player.position.y = -3
+  player.position.z = -23
 
   //Collision
   SelectedLVL("col").forEach(wall => {
@@ -165,57 +149,61 @@ function loadMap() { //Sets the properties to begin the game
   gameStarted = true
   playMusic()
 }
+function playMusic() {
+  if (SelectedLVL("lvlMus") != "mus_none") {
+    let mus = new Audio('./audio/' + SelectedLVL("lvlMus") + '.mp3')
+    mus.addEventListener('ended', function() { // Thanks @kingjeffrey on stackoverflow for FF loop support!
+      this.currentTime = 0
+      this.play()
+    }, false)
+    mus.play()
+  }
+}
 
 loadModel()
 loadMap()
 
-//Constantly updated to the last good position so once the player makes a collision with a wall it will set it to this
-let goodPos = [0, 0, -23]
-
 function redraw() {
   requestAnimationFrame(redraw)
-  camera.position.x = playerObj.position.x
-  camera.position.y = playerObj.position.y
-  camera.position.z = playerObj.position.z
-  camera.rotation.y = playerObj.rotation.y
-  faceObj.rotation.y = playerObj.rotation.y
-  startObj.rotation.y = playerObj.rotation.y
+  camera.position.x = player.position.x
+  camera.position.y = player.position.y
+  camera.position.z = player.position.z
+  camera.rotation.y = player.rotation.y
+  faceObj.rotation.y = player.rotation.y
+  startObj.rotation.y = player.rotation.y
 
 	var delta = clock.getDelta()
 	if (mixer) mixer.update(delta)
 
-  playerObj.position.x += -Math.sin(playerObj.rotation.y) * player.p.forwardVel
-  playerObj.position.z += -Math.cos(playerObj.rotation.y) * player.p.forwardVel
-
-  SelectedLVL("col").forEach(wall => {
-    if(checkCollision(playerObj, wall)) {
-      player.p.forwardVel = 0
-      playerObj.position.x = goodPos[0]
-      playerObj.position.y = goodPos[1]
-      playerObj.position.z = goodPos[2]
-    } else {
-      goodPos[0] = playerObj.position.x
-      goodPos[1] = playerObj.position.y
-      goodPos[2] = playerObj.position.z
-    }
-  })
-
-  //Prevent the Maze 95 JS version of BLJing
-  if (player.p.forwardVel < -window.spd) {
-    player.p.forwardVel = -window.spd
-  }
-
   renderer.render(scene, camera)
 }
 
-kd.W.down(()=> {player.determineVelocity(window.spd)})
-kd.W.up(()=> {player.stop(window.spd)})
+function playerAction(type, speed) {
+  switch(type) {
+    case "move":
+      player.getWorldDirection(dir)
 
-kd.S.down(()=> {player.determineVelocity(-window.spd)})
-kd.S.up(()=> {player.stop(-window.spd)})
+      player.position.x += dir.x * (speed/1.45)
+      SelectedLVL("col").forEach(wall => {
+        if(collisionCheck(player, wall)) player.position.x -= dir.x * (speed/1.45)
+      })
+      player.position.z += dir.z * (speed/1.45)
+      SelectedLVL("col").forEach(wall => {
+        if(collisionCheck(player, wall)) player.position.z -= dir.z * (speed/1.45)
+      })
+      break
+    
+    case "rotate":
+      player.rotation.y += speed
+      break
+  }
+}
 
-kd.A.down(()=> {player.rotate(window.spd/window.rotDiv)})
-kd.D.down(()=> {player.rotate(-window.spd/window.rotDiv)})
+kd.W.down(()=> {playerAction("move", -window.spd)})
+kd.S.down(()=> {playerAction("move", window.spd)})
+
+kd.A.down(()=> {playerAction("rotate", window.spd / window.rotDiv)})
+kd.D.down(()=> {playerAction("rotate", -window.spd / window.rotDiv)})
 
 //Execute keydrown tick and run redraw
 kd.run(function(){kd.tick()})
