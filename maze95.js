@@ -138,7 +138,7 @@ function loadModel() { //Loads in the maze 3D model
   scene.add(gltf.scene)
   gltf.scene.position.y = 8
   })
-  window.spd = 0.95
+  window.spd = 0.95 //Easter egg if you're looking here
 }
 
 let amb
@@ -154,6 +154,7 @@ function loadMap() { //Sets the properties to begin the game
     scene.add(wall)
   })
 
+  //Various objects
   scene.add(ceiling)
   scene.add(floor)
   scene.add(faceObj)
@@ -168,6 +169,7 @@ function loadMap() { //Sets the properties to begin the game
 loadModel()
 loadMap()
 
+//Constantly updated to the last good position so once the player makes a collision with a wall it will set it to this
 let goodPos = [0, 0, -23]
 
 function redraw() {
@@ -191,15 +193,14 @@ function redraw() {
       playerObj.position.x = goodPos[0]
       playerObj.position.y = goodPos[1]
       playerObj.position.z = goodPos[2]
+    } else {
+      goodPos[0] = playerObj.position.x
+      goodPos[1] = playerObj.position.y
+      goodPos[2] = playerObj.position.z
     }
   })
 
-  if (!player.p.collided) {
-    goodPos[0] = playerObj.position.x
-    goodPos[1] = playerObj.position.y
-    goodPos[2] = playerObj.position.z
-  }
-
+  //Prevent the Maze 95 JS version of BLJing
   if (player.p.forwardVel < -window.spd) {
     player.p.forwardVel = -window.spd
   }
@@ -207,14 +208,14 @@ function redraw() {
   renderer.render(scene, camera)
 }
 
-kd.W.down(function(){player.determineVelocity(window.spd)})
+kd.W.down(()=> {player.determineVelocity(window.spd)})
 kd.W.up(()=> {player.stop(window.spd)})
 
 kd.S.down(()=> {player.determineVelocity(-window.spd)})
 kd.S.up(()=> {player.stop(-window.spd)})
 
-kd.A.down(()=> {player.rotateA(window.spd/window.rotDiv)})
-kd.D.down(()=> {player.rotateD(window.spd/window.rotDiv)})
+kd.A.down(()=> {player.rotate(window.spd/window.rotDiv)})
+kd.D.down(()=> {player.rotate(-window.spd/window.rotDiv)})
 
 //Execute keydrown tick and run redraw
 kd.run(function(){kd.tick()})
