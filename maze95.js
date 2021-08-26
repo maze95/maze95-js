@@ -2,91 +2,53 @@ import * as THREE from './lib/three.module.js'
 import { GLTFLoader } from "./lib/model_loader.js"
 import "./lib/keydrown.min.js"
 import { SelectedLVL } from "./levels/level_defines.js"
-import { move } from "./lib/player_col.js"
-import { rotateA, rotateD, moveW, moveS } from "./lib/player_no_col.js"
-import { widescreen } from "./lib/settings.js"
+import * as player from "./lib/player.js"
+import { widescreen, collisionMat } from "./lib/settings.js"
 import "./lib/settings.js"
 
 import { faceObj } from "./lib/object_defines.js"
 import { startObj } from "./lib/object_defines.js"
+import { checkCollision } from './lib/surface.js'
 
 var width = 512
 var height = 384
+
+let collisionVisible = false
+
+window.showCollision = function() {
+  collisionVisible = !collisionVisible
+  if (collisionVisible) {
+    collisionMat.opacity = 1
+  } else {
+    collisionMat.opacity = 0
+  }
+}
 
 const gameCanvas = document.getElementById("game")
 
 const win95teal = new THREE.Color(0x018281)
 const black = new THREE.Color(0x000000)
-const green = new THREE.MeshBasicMaterial({ color: 0x248000 })
-const red = new THREE.MeshBasicMaterial(0xfc0303)
+const red = new THREE.MeshBasicMaterial({color: 0xfc0303})
+const invisible = new THREE.MeshBasicMaterial({color: 0x248000, transparent: true, opacity: 0})
 
-const scene = new THREE.Scene()
-scene.background = win95teal
-window.spooky = false
+export const scene = new THREE.Scene()
 
-function fog(color, near, far) {
-  scene.fog = new THREE.Fog(color, near, far);
-}
-function unfog() {
-  scene.fog = null
-}
 const camera = new THREE.PerspectiveCamera(60,width/height)
 
-let titleMus = new Audio("./audio/mus_bg.mp3")
-titleMus.addEventListener('ended', function() { // Thanks @kingjeffrey on stackoverflow for FF loop support!
-  this.currentTime = 0
-  this.play()
-}, false)
-titleMus.play()
+window.spd
+window.rotDiv = 20
 
-let dir = new THREE.Vector3()
-var spd = 0
-window.spd = 0
-window.rotDiv = 17
 let clock = new THREE.Clock()
 let gameStarted = false
 let inMaze = true //I am planning to have a pool of maze levels that a random number generator's output determines, this value is for knowing if the player is in a maze level or bigroom due to the model loading function also needing to load in animations which bigroom does not have.
 
-if(window.ceilingTexName !== "ceiling.png") {
-  console.log("Custom ceiling texture detected")
-}
-if(window.floorTexName !== "floor.png") {
-  console.log("Custom floor texture detected")
-}
-if(window.wallTexName !== "wall.png") {
-  console.log("Custom floor texture detected")
-}
-if(window.texturePath !== "./textures/") {
-  console.log("Custom texture path detected")
-}
+const playerGeo = new THREE.BoxGeometry(3,3,3)
+export const playerObj = new THREE.Mesh(playerGeo, invisible)
 
-const wallTex = new THREE.TextureLoader().load(`${texturePath}${window.wallTexName}`, function ( texture ) {
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
-  texture.offset.set(0,0)
-  texture.repeat.set(2,2)
-})
-wallTex.magFilter = THREE.NearestFilter
-const wallMat = new THREE.MeshBasicMaterial({map: wallTex})
-
-const playergeo = new THREE.BoxGeometry(3,3,3)
-export const player = new THREE.Mesh(playergeo,green)
-
-const titleCubeGeo = new THREE.BoxGeometry(15,15,15)
-const titleCube = new THREE.Mesh(titleCubeGeo, wallMat)
-scene.add(titleCube)
-titleCube.position.z = -30
-titleCube.position.x = 7
-titleCube.rotation.y = 0.45
-
-const classicstartLis = document.getElementById("classicstart")
-const storystartLis = document.getElementById("storystart")
-storystartLis.disabled = true
-console.log("Story Mode unimplemented")
-
-scene.add(player)
+scene.add(playerObj)
 scene.add(camera)
 
-const ceilingTex = new THREE.TextureLoader().load(`${texturePath}${window.ceilingTexName}`, function ( texture ) {
+const ceilingTex = new THREE.TextureLoader().load("./textures/ceiling.png", function ( texture ) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,0)
   texture.repeat.set(80,70)
@@ -94,10 +56,10 @@ const ceilingTex = new THREE.TextureLoader().load(`${texturePath}${window.ceilin
 ceilingTex.magFilter = THREE.NearestFilter
 const ceilingMat = new THREE.MeshBasicMaterial({map: ceilingTex})
 
-const floorTex = new THREE.TextureLoader().load(`${texturePath}${window.floorTexName}`, function ( texture ) {
+const floorTex = new THREE.TextureLoader().load("./textures/floor.png", function ( texture ) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,0)
-  texture.repeat.set(25,25)
+  texture.repeat.set(30,30)
 })
 floorTex.magFilter = THREE.NearestFilter
 const floorMat = new THREE.MeshBasicMaterial({map: floorTex})
@@ -112,7 +74,7 @@ const ceiling = new THREE.Mesh(
 )
 
 function playMusic() {
-  if(SelectedLVL("lvlMus") !== "mus_none") {
+  if (SelectedLVL("lvlMus") != "mus_none") {
     let mus = new Audio('./audio/' + SelectedLVL("lvlMus") + '.mp3')
     mus.addEventListener('ended', function() { // Thanks @kingjeffrey on stackoverflow for FF loop support!
       this.currentTime = 0
@@ -127,64 +89,42 @@ const renderer = new THREE.WebGL1Renderer({
 })
 
 renderer.setPixelRatio(window.devicePixelRatio)
-if(!widescreen) {
-  renderer.setSize(width, height)
-}
-else {
+if (widescreen) {
   renderer.setSize(window.innerWidth, window.innerHeight)
-}
-
-//Canvas width and height only used if widescreen is set to true
-const widesizes = {
-  width: window.innerWidth,
-  height: window.innerHeight
-}
-
-//Init widescreen functionality
-if(widescreen) {
-  width = window.innerWidth
-  height = window.innerHeight
+} else {
+  renderer.setSize(width, height)
 }
 
 var mixer
 var action
 
 //Dynamic scaling for widescreen
-window.addEventListener('resize', () => {
-  if(widescreen)
-  {
+window.addEventListener('resize', () =>
+{
+  if (widescreen) {
     // Update sizes
-    widesizes.width = window.innerWidth
-    widesizes.height = window.innerHeight
+    const widewidth = window.innerWidth
+    const wideheight = window.innerHeight
 
-    // Update camera
-    camera.aspect = widesizes.width / widesizes.height
+      // Update camera
+    camera.aspect = width / height
     camera.updateProjectionMatrix()
 
-    // Update renderer
-    renderer.setSize(widesizes.width, widesizes.height)
+      // Update renderer
+    renderer.setSize(widewidth, wideheight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    gameCanvas.width = window.innerWidth
-    gameCanvas.height = window.innerHeight
   }
 })
 
-function clearCanvas() {
-  document.getElementById("title").remove()
-  classicstartLis.remove()
-  storystartLis.remove()
-  titleMus.pause()
-}
-
-function loadModel() {
+function loadModel() { //Loads in the maze 3D model
   var loader = new GLTFLoader();
   loader.load(SelectedLVL("lvlDir"), function (gltf) {
-  if(SelectedLVL("lvlName") !== "maze") {
+  if (SelectedLVL("lvlName") != "maze") {
     inMaze = false
     scene.remove(floor)
     scene.remove(ceiling)
   }
-  if(inMaze) {
+  if (inMaze) {
     mixer = new THREE.AnimationMixer(gltf.scene)
 
     action = mixer.clipAction(gltf.animations[ 0 ])
@@ -194,38 +134,26 @@ function loadModel() {
     action.play()
     action.play().reset()
   }
-  else {
-    console.log("Level not a maze level; skipping animation initalization")
-  }
 
   scene.add(gltf.scene)
   gltf.scene.position.y = 8
   })
-  window.spd = 0.9
-  spd = window.spd
-}
-
-classicstartLis.onclick = function startGame() {
-  document.getElementById("classicstart").disabled = true
-  scene.background = black
-  clearCanvas()
-  loadModel()
-  loadMap()
-}
-
-var resetButton = document.getElementById("reset")
-
-resetButton.onclick = function resetGame() {
-  location.reload()
+  window.spd = 0.95
 }
 
 let amb
 
-function loadMap() {
-  scene.remove(titleCube)
+function loadMap() { //Sets the properties to begin the game
   floor.position.set(0,-18,-215)
   ceiling.position.set(0,12,-215)
-  player.position.z = -23
+  playerObj.position.y = -3
+  playerObj.position.z = -23
+
+  //Collision
+  SelectedLVL("col").forEach(wall => {
+    scene.add(wall)
+  })
+
   scene.add(ceiling)
   scene.add(floor)
   scene.add(faceObj)
@@ -237,71 +165,57 @@ function loadMap() {
   playMusic()
 }
 
+loadModel()
+loadMap()
+
+let goodPos = [0, 0, -23]
+
 function redraw() {
   requestAnimationFrame(redraw)
-  player.getWorldDirection(dir)
-  camera.position.x = player.position.x
-  camera.position.y = player.position.y
-  camera.position.z = player.position.z
-  camera.rotation.y = player.rotation.y
-  spd = window.spd
-  faceObj.rotation.y = player.rotation.y
-  startObj.rotation.y = player.rotation.y
-
-  if(window.spooky && !gameStarted) {
-    console.warn("Cannot enable spooky mode yet, map not loaded.") //Any help on how not to newly warn every single framew would be appreciated
-  }
-
-  if(window.spooky && gameStarted) {
-    fog(0x0000, 5, 50)
-    amb.color.setHex(0x707070)
-  }
-  else {
-    unfog()
-  }
+  camera.position.x = playerObj.position.x
+  camera.position.y = playerObj.position.y
+  camera.position.z = playerObj.position.z
+  camera.rotation.y = playerObj.rotation.y
+  faceObj.rotation.y = playerObj.rotation.y
+  startObj.rotation.y = playerObj.rotation.y
 
 	var delta = clock.getDelta()
 	if (mixer) mixer.update(delta)
 
+  playerObj.position.x += -Math.sin(playerObj.rotation.y) * player.p.forwardVel
+  playerObj.position.z += -Math.cos(playerObj.rotation.y) * player.p.forwardVel
+
+  SelectedLVL("col").forEach(wall => {
+    if(checkCollision(playerObj, wall)) {
+      player.p.forwardVel = 0
+      playerObj.position.x = goodPos[0]
+      playerObj.position.y = goodPos[1]
+      playerObj.position.z = goodPos[2]
+    }
+  })
+
+  if (!player.p.collided) {
+    goodPos[0] = playerObj.position.x
+    goodPos[1] = playerObj.position.y
+    goodPos[2] = playerObj.position.z
+  }
+
+  if (player.p.forwardVel < -window.spd) {
+    player.p.forwardVel = -window.spd
+  }
+
   renderer.render(scene, camera)
 }
 
-kd.W.down(function(){moveW(spd)})
-kd.A.down(function(){rotateA(spd/window.rotDiv)})
-kd.S.down(function(){moveS(spd)})
-kd.D.down(function(){rotateD(spd/window.rotDiv)})
+kd.W.down(function(){player.determineVelocity(window.spd)})
+kd.W.up(()=> {player.stop(window.spd)})
 
-/*function move(type,speed) {
-  switch(type) {
-      case "move":
-          //if(kd.Q.isDown()) speed *= 1.7
-          player.getWorldDirection(dir)
-          // Could applyScaledVector, however splitting X and Z application allows for collision detection to "slide" you down walls.
-          player.position.x += dir.x * (speed/2)
-          if(!collisionCheck()) player.position.x -= dir.x * (speed/2)
-          player.position.z += dir.z * (speed/2)
-          if(!collisionCheck()) player.position.z -= dir.z * (speed/2)
-          break
-      case "rotate":
-          player.rotation.y += speed/28
-          break
-      default: // fallback
-          throw "you do not exist " + type // theoretically this should never be called
-  }
-}
-commented out player controller that is supposed to work with collision
-// key input checks
-kd.W.down(function(){move("move",-spd)})
-kd.A.down(function(){move("rotate",spd)})
-kd.S.down(function(){move("move",spd)})
-kd.D.down(function(){move("rotate",-spd)})*/
+kd.S.down(()=> {player.determineVelocity(-window.spd)})
+kd.S.up(()=> {player.stop(-window.spd)})
 
-kd.L.down(
-  function() {
-    console.log(player.position)
-    console.log(player.rotation.y)
-  }
-)
+kd.A.down(()=> {player.rotateA(window.spd/window.rotDiv)})
+kd.D.down(()=> {player.rotateD(window.spd/window.rotDiv)})
+
 //Execute keydrown tick and run redraw
 kd.run(function(){kd.tick()})
 redraw()

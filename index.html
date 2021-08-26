@@ -16,12 +16,9 @@
   </head>
   <body>
     <h1>Maze 95 JS</h1><br>
-    <button onclick="resetGame()" id="reset">Reset Game</button><br>
+    <button onclick="location.reload()" id="reset">Reset Game</button><br>
     <div class="gameCanvas">
       <canvas id="game"></canvas>
-      <div id="title">Maze 95 JS</div>
-      <button onclick="startGame()" id="classicstart">Classic Mode</button>
-      <button id="storystart">Story Mode</button>
     </div>
     <label hidden type="text">Select Level:</label>
     <select hidden id="lvlSel">
@@ -30,7 +27,8 @@
     </select hidden>
     <h2>Known Bugs:</h2><br>
     <pre>
-      Collision is not fully implemented yet.
+      Collision is not fully implemented yet, it is partially completed in the starting area
+      of the maze.
     </pre>
     <pre>
       The Title Screen now has music however there is a policy where audio cannot autoplay 
@@ -46,9 +44,7 @@
     <h2 id="header">What is this?</h2>
     <pre>
       Maze 95 JS or maze95-js is a recreation of the Windows 95 3D Maze screensaver in the form of a playable web game.
-      I am planning to add online multiplayer functionality in the future once the game is in a complete enough state, you 
-      also may have noticed the disabled "Story Mode" button on the new Title Screen, this hints at there being a gamemode 
-      where there is an objective to follow instead of roaming around the maze.
+      There is a multiplayer version available now on my GitHub page but for now I am prioritizing progress on this version.
     </pre>
   </body>
 </html>

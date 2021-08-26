@@ -61,23 +61,9 @@ select {
 }
 
 #game {
-    border: 50px solid rgb(192, 192, 192)
+    border: 50px solid rgb(192, 192, 192);
 }
 
 #header {
     font-size: 30px;
-}
-
-#classicstart {
-    position: absolute;
-    top: 120px;
-    left: 60px;
-    font-size: 20px;
-}
-
-#storystart {
-    position: absolute;
-    top: 170px;
-    left: 60px;
-    font-size: 20px;
 }
