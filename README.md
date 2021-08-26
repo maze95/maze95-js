@@ -6,4 +6,5 @@ Maze map that is near identical to the original generation of the maze, I have f
 
 # Bugs
 Start logo vanishing at some angles
+
 Prevent player movement until maze rising animation has finished.
