@@ -12,16 +12,26 @@ import { collisionCheck } from './lib/surface.js'
 let width = 512
 let height = 384
 
-const renderer = new THREE.WebGL1Renderer({
+let gameStarted = false
+let clock = new THREE.Clock()
+let dir = new THREE.Vector3() //Player direction
+window.spd
+window.rotDiv = 20
+
+let collisionVisible = false
+window.showCollision = function() {
+  collisionVisible = !collisionVisible
+  if (collisionVisible) {
+    collisionMat.opacity = 0.9
+  } else {
+    collisionMat.opacity = 0
+  }
+}
+
+const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#game'),
   antialias: false
 })
-
-/*if (/\bCrOS\b/.test(navigator.userAgent)) {
-  renderer.setPixelRatio(window.devicePixelRatio / 14) //The ultimate troll for chromebook users lmao
-} else {
-  renderer.setPixelRatio(window.devicePixelRatio)
-}*/
 renderer.setPixelRatio(window.devicePixelRatio)
 if (widescreen) {
   renderer.setSize(window.innerWidth, window.innerHeight)
@@ -48,13 +58,6 @@ window.addEventListener('resize', () =>
 
 const invisible = new THREE.MeshBasicMaterial({color: 0x248000, /*transparent: true,*/ opacity: 0})
 
-let clock = new THREE.Clock()
-let gameStarted = false
-let inMaze = true //I am planning to have a pool of maze levels that an rng determines, this value is for knowing if the player is in a maze level or bigroom due to bigroom not having any animations to play.
-let dir = new THREE.Vector3() //Player direction
-window.spd
-window.rotDiv = 20
-
 export const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(60,width/height)
 
@@ -64,15 +67,12 @@ export const player = new THREE.Mesh(playerGeo, invisible)
 scene.add(player)
 scene.add(camera)
 
-let collisionVisible = false
-window.showCollision = function() {
-  collisionVisible = !collisionVisible
-  if (collisionVisible) {
-    collisionMat.opacity = 0.9
-  } else {
-    collisionMat.opacity = 0
-  }
-}
+const wallTex = new THREE.TextureLoader().load("./textures/wall.png", function ( texture ) {
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping
+  texture.offset.set(0,-0.02)
+  texture.repeat.set(1,0.98)
+})
+wallTex.magFilter = THREE.NearestFilter
 
 const ceilingTex = new THREE.TextureLoader().load("./textures/ceiling.png", function ( texture ) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
@@ -105,12 +105,10 @@ let action
 function loadModel() { //Loads in the maze 3D model
   var loader = new GLTFLoader();
   loader.load(SelectedLVL("lvlDir"), function (gltf) {
-  if (SelectedLVL("lvlName") != "maze") {
-    inMaze = false
+  if (!SelectedLVL("lvlName").includes("maze")) {
     scene.remove(floor)
     scene.remove(ceiling)
-  }
-  if (inMaze) {
+  } else {
     mixer = new THREE.AnimationMixer(gltf.scene)
 
     action = mixer.clipAction(gltf.animations[ 0 ])
@@ -120,7 +118,7 @@ function loadModel() { //Loads in the maze 3D model
     action.play()
     action.play().reset()
   }
-
+  eval(SelectedLVL("flg"))
   scene.add(gltf.scene)
   gltf.scene.position.y = 8
   })
@@ -130,13 +128,16 @@ function loadModel() { //Loads in the maze 3D model
 function loadMap() { //Sets the properties to begin the game
   floor.position.set(0,-18,-215)
   ceiling.position.set(0,12,-215)
-  player.position.y = -3
-  player.position.z = -23
+  player.position.x = SelectedLVL("pos")[0]
+  player.position.y = SelectedLVL("pos")[1]
+  player.position.z = SelectedLVL("pos")[2]
 
   //Collision
-  SelectedLVL("col").forEach(wall => {
-    scene.add(wall)
-  })
+  if (SelectedLVL("col") != null) {
+    SelectedLVL("col").forEach(wall => {
+      scene.add(wall)
+    })
+  }
 
   //Various objects
   scene.add(ceiling)

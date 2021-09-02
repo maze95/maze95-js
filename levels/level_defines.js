@@ -1,7 +1,6 @@
 import { maze_entry } from "./maze/script.js"
-import { bigroom_entry } from "./bigroom/script.js"
 
-function lvlEntry() {
+function lvlEntry() { //Selected level manager
     var select = document.getElementById("lvlSel")
     var selectedVal = select.options[select.selectedIndex].value
 
@@ -9,11 +8,11 @@ function lvlEntry() {
         case "maze":
             return maze_entry
         case "bigroom":
-            return bigroom_entry
+            console.log("Gone, reducted to atoms.")
     }
 }
 
-export const SelectedLVL = (req) => {
+export const SelectedLVL = (req) => { //Returns the selected level's requested data
     let selected_lvl = lvlEntry()
     switch(req) {
         case "lvlName":
@@ -32,6 +31,8 @@ export const SelectedLVL = (req) => {
             return selected_lvl[6]
         case "startLogoPos":
             return selected_lvl[7]
+        case "flg":
+            return selected_lvl[8]
         default:
             throw "Unimplemented data " + req
     }
