@@ -1,6 +1,6 @@
 @font-face {
     font-family: ms-sans-serif;
-    src: url('lib/font/ms-sans-serif.otf');
+    src: url('game/font/ms-sans-serif.otf');
 }
 
 body {
@@ -61,7 +61,7 @@ select {
 }
 
 #game {
-    border: 50px solid rgb(192, 192, 192);
+    border: 55px solid rgb(192, 192, 192);
 }
 
 #header {

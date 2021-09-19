@@ -17,5 +17,5 @@ export const maze_entry = [
 
     [0,0.2,-40], //Start logo XYZ pos
 
-    "gltf.scene.children[0].children[0].material = new THREE.MeshBasicMaterial({map: wallTex})" //Level flags
+    "gltf.scene.children[0].children[0].material = wallMat; const floor = new THREE.Mesh(new THREE.BoxGeometry(1000,0.1,1000), floorMat); scene.add(floor); const ceiling = new THREE.Mesh(new THREE.BoxGeometry(1000,0.1,1000), ceilingMat); scene.add(ceiling); floor.position.set(0,-18,-215); ceiling.position.set(0,12,-215);" //Level flags
 ]

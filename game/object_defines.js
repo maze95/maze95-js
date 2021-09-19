@@ -13,11 +13,10 @@ const startTexture = new THREE.TextureLoader().load("./textures/start.png")
 startTexture.magFilter = THREE.NearestFilter
 const startMat = new THREE.MeshBasicMaterial({map: startTexture, transparent: true, opacity: 0.6})
 
-//Face usually used as the indicator to make a new maze rise from the ashes of the old one.
 export const faceObj = new THREE.Mesh(
-    new THREE.BoxGeometry(16,9.5,0),
-    face
-  )
+  new THREE.BoxGeometry(16,9.5,0),
+  face
+)
 faceObj.position.x = finPos[0]
 faceObj.position.y = finPos[1] - 3
 faceObj.position.z = finPos[2]

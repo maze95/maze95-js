@@ -1,5 +1,5 @@
-import * as THREE from '../../lib/three.module.js'
-import { collisionMat } from "../../lib/settings.js"
+import * as THREE from '../../game/three.module.js'
+import { collisionMat } from "../../game/settings.js"
 
 const wall1Geo = new THREE.BoxGeometry(400,50,5)
 const wall1 = new THREE.Mesh(wall1Geo, collisionMat)
