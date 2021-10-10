@@ -1,14 +1,14 @@
 import { maze_entry } from "./maze/script.js"
 
-function lvlEntry() { //Selected level manager
-    var select = document.getElementById("lvlSel")
-    var selectedVal = select.options[select.selectedIndex].value
-
-    switch (selectedVal) {
+function lvlEntry() {
+    const query = window.location.search
+    const urlParams = new URLSearchParams(query)
+    if (!urlParams.has("level")) return maze_entry
+    switch (urlParams.get("level")) {
         case "maze":
             return maze_entry
-        case "bigroom":
-            console.log("Gone, reducted to atoms.")
+        default:
+            return maze_entry
     }
 }
 

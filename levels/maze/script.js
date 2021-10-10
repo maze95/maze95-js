@@ -1,4 +1,4 @@
-import { maze0Collision } from "./collision.js"
+import { maze_collision } from "./collision.js"
 
 export const maze_entry = [
     "maze", //Level name
@@ -9,7 +9,7 @@ export const maze_entry = [
 
     [0, /*X*/ -3, /*Y*/ -23 /*Z*/], //Start pos
 
-    maze0Collision, //Collision
+    maze_collision, //Collision
 
     1.5, //Ambient light intensity
 

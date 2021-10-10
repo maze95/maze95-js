@@ -3,7 +3,7 @@ import { SelectedLVL } from "../levels/level_defines.js"
 import { collisionCheck } from "./surface.js"
 import { invisible } from "./settings.js"
 
-const playerGeo = new THREE.BoxGeometry(3,3,3)
+const playerGeo = new THREE.BoxGeometry(15,20,15)
 export const player = new THREE.Mesh(playerGeo, invisible)
 let dir = new THREE.Vector3() //Player direction
 

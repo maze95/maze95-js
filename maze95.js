@@ -4,16 +4,17 @@ import "./game/keydrown.min.js" // input
 import { SelectedLVL } from "./levels/level_defines.js"
 import { collisionMat, billboard } from "./game/settings.js"
 import { initRenderer, renderer, width, height } from "./game/renderer.js"
-import { faceObj } from "./game/object_defines.js"
-import { startObj } from "./game/object_defines.js"
+import { col_util } from "./game/collision_util.js"
 
-import { playerAction, player } from "./game/player_controller.js"
+import { faceObj } from "./game/object_defines.js" // object
+import { startObj } from "./game/object_defines.js" // object
+import { playerAction, player } from "./game/player_controller.js" // player code
 
-import { floorMat, ceilingMat, wallMat } from "./textures/inside.js"
+import { floorMat, ceilingMat, wallMat } from "./textures/inside.js" // for eval flags
 
 console.log("achieved with MazeSrc\n\nepic Half-Life reference")
-window.spd = 0.95
-window.rotDiv = 22.5
+window.spd = 0.0000000001
+window.rotDiv = 1
 initRenderer()
 export const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(60,width/height)
@@ -42,7 +43,6 @@ function loadMap() {
   player.position.x = SelectedLVL("pos")[0]
   player.position.y = SelectedLVL("pos")[1]
   player.position.z = SelectedLVL("pos")[2]
-
   // collision
   if (SelectedLVL("col") != null) {
     SelectedLVL("col").forEach(wall => {
@@ -65,7 +65,9 @@ function loadMap() {
   }
 }
 loadMap()
+col_util()
 
+let codeExec = false // variable for only running code once within the update function after the maze has rose
 function update() {
   requestAnimationFrame(update)
   camera.position.x = player.position.x
@@ -79,10 +81,14 @@ function update() {
     if (model.scene.position.y < 54) {
       model.scene.position.y += 0.5
     } else {
-      model.scene.position.y = 54
+      if (!codeExec) {
+        codeExec = true
+        window.spd = 0.95
+        window.rotDiv = 22.5
+        model.scene.position.y = 54
+      }
     }
   }
-
   renderer.render(scene, camera)
 }
 
@@ -90,6 +96,5 @@ kd.W.down(()=> {playerAction("move", -window.spd)})
 kd.S.down(()=> {playerAction("move", window.spd)})
 kd.A.down(()=> {playerAction("rotate", window.spd / window.rotDiv)})
 kd.D.down(()=> {playerAction("rotate", -window.spd / window.rotDiv)})
-
 kd.run(function(){kd.tick()})
 update()

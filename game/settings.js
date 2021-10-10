@@ -7,3 +7,11 @@ export const invisible = new THREE.MeshBasicMaterial({color: 0x248000, /*transpa
 export const billboard = (obj, lookAt) => {
     obj.rotation.y = lookAt.rotation.y
 }
+
+let query = window.location.search
+let params = new URLSearchParams(query)
+export const getParam = (name) => {
+    if (!params.has(name)) { return false } else {
+        if (params.get(name)) { return true } else { return false }
+    }
+}
