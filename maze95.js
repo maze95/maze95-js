@@ -48,10 +48,7 @@ window.rotDiv = 20
 let amb
 player.position.y = -3
 player.position.z = -25
-if (!window.location.href.includes("?seen=1")) {
-  alert("You are probably gonna spawn in a wall, if that happens, refresh the page and try again.")
-  window.location.href += "?seen=1"
-}
+alert("You are probably going to spawn in a wall, if that happens just refresh the page and try again.")
 
 maze_gen.make_maze()
 //scene.add(faceObj)
