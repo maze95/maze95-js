@@ -1,8 +1,4 @@
 import * as THREE from './three.module.js'
-import { SelectedLVL } from "../levels/level_defines.js"
-
-let finPos = SelectedLVL("finPos")
-let startlogoPos = SelectedLVL("startLogoPos")
 
 //Texture defines
 const faceTexture = new THREE.TextureLoader().load("./textures/fin.png")
@@ -17,14 +13,14 @@ export const faceObj = new THREE.Mesh(
   new THREE.BoxGeometry(16,9.5,0),
   face
 )
-faceObj.position.x = finPos[0]
-faceObj.position.y = finPos[1] - 3
-faceObj.position.z = finPos[2]
+faceObj.position.x = 0
+faceObj.position.y = -3
+faceObj.position.z = 0
 
 export const startObj = new THREE.Mesh(
   new THREE.BoxGeometry(18,25,0),
   startMat
 )
-startObj.position.x = startlogoPos[0]
-startObj.position.y = startlogoPos[1] - 3
-startObj.position.z = startlogoPos[2]
+startObj.position.x = 0
+startObj.position.y = -3.2
+startObj.position.z = -40
