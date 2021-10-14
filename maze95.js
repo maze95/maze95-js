@@ -3,7 +3,7 @@ import "./game/keydrown.min.js" // input
 import * as maze_gen from "./game/generation.js"
 import { startObj } from "./game/object_defines.js" // object
 import { playerAction, player } from "./game/player_controller.js" // player code
-import { ceilingMat, floorMat } from './textures/inside.js'
+import { ceilingMat, floorMat } from './textures/textures.js'
 
 const widescreen = false
 export const width = 640

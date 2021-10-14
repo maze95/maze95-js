@@ -1,6 +1,6 @@
 import * as THREE from './three.module.js'
 import { scene } from "../maze95.js"
-import { wallMat } from "../textures/inside.js"
+import { wallMat } from "../textures/textures.js"
 
 let collisionMesh = []
 export { collisionMesh }
