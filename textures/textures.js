@@ -26,3 +26,12 @@ const floorTex = new THREE.TextureLoader().load(`${texPath}floor.png`, function 
 })
 floorTex.magFilter = THREE.NearestFilter
 export const floorMat = new THREE.MeshBasicMaterial({map: floorTex})
+
+
+const faceTexture = new THREE.TextureLoader().load("./textures/fin.png")
+faceTexture.magFilter = THREE.NearestFilter
+export const face = new THREE.MeshStandardMaterial({map: faceTexture, transparent: true, opacity: 0.65})
+
+const startTexture = new THREE.TextureLoader().load("./textures/start.png")
+startTexture.magFilter = THREE.NearestFilter
+export const start = new THREE.MeshBasicMaterial({map: startTexture, transparent: true, opacity: 0.6})
