@@ -107,5 +107,4 @@ export const make_maze = () => {
             } else { new_map[x][y] = false }
         }
     }
-    console.log(collisionMesh)
 }
