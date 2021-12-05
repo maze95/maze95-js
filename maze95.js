@@ -1,9 +1,10 @@
 import * as THREE from './game/three.module.js' // Maze 95 JS, now in 3D!
+import * as MazeGen from "./game/generation.js"
+import * as Utils from "./game/utils.js"
+import * as Player from "./game/player_controller.js" // player code
 import "./game/keydrown.min.js" // input
-import * as maze_gen from "./game/generation.js"
-import { startObj } from "./game/object_defines.js" // object
-import { playerAction, player } from "./game/player_controller.js" // player code
 import { ceilingMat, floorMat } from './textures/textures.js'
+import { startObj } from "./game/object_defines.js" // object
 
 const widescreen = false
 export const width = 640
@@ -18,6 +19,13 @@ if (widescreen) {
 } else {
   renderer.setSize(width, height)
 }
+
+window.enterFullscreen = () => {
+  document.getElementById("game").style = null
+  document.getElementById("game").requestFullscreen()
+}
+
+if (widescreen) document.getElementById("game").style = null
 
 //Dynamic scaling for widescreen
 window.addEventListener('resize', () =>
@@ -39,18 +47,17 @@ window.addEventListener('resize', () =>
 
 export const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(60,width/height)
-scene.add(player)
+scene.add(Player.pObj)
 scene.add(camera)
 
-window.spd = 0.8
-window.rotDiv = 20
+window.spd = 0.95
+window.rotDiv = 22
 
 let amb
-player.position.y = -3
-player.position.z = -25
-alert("You are probably going to spawn in a wall, if that happens just refresh the page and try again.")
+Player.pObj.position.y = -3
+Player.pObj.position.z = -25
 
-maze_gen.make_maze()
+MazeGen.make_maze()
 //scene.add(faceObj)
 scene.add(startObj)
 amb = new THREE.AmbientLight(0xffffff, 2)
@@ -60,27 +67,33 @@ const floorGeo = new THREE.BoxGeometry(1000,1,1000)
 const floor = new THREE.Mesh(floorGeo, floorMat)
 floor.position.y = -13
 scene.add(floor)
+
 const ceilingGeo = new THREE.BoxGeometry(1000,1,1000)
 const ceiling = new THREE.Mesh(ceilingGeo, ceilingMat)
 ceiling.position.y = 9
 scene.add(ceiling)
 
+// objects
+scene.add(startObj)
+
+Utils.moveOut()
+
 function update() {
   requestAnimationFrame(update)
-  camera.position.x = player.position.x
-  camera.position.y = player.position.y
-  camera.position.z = player.position.z
-  camera.rotation.y = player.rotation.y
-  //billboard(faceObj, player)
-  startObj.rotation.y = player.rotation.y
+  camera.position.x = Player.pObj.position.x
+  camera.position.y = Player.pObj.position.y
+  camera.position.z = Player.pObj.position.z
+  camera.rotation.y = Player.pObj.rotation.y
+
+  startObj.rotation.y = Player.pObj.rotation.y
 
   renderer.render(scene, camera)
 }
 
-kd.W.down(()=> {playerAction("move", -window.spd)})
-kd.S.down(()=> {playerAction("move", window.spd)})
-kd.A.down(()=> {playerAction("rotate", window.spd / window.rotDiv)})
-kd.D.down(()=> {playerAction("rotate", -window.spd / window.rotDiv)})
+kd.W.down(()=> {Player.playerAction("move", -window.spd)})
+kd.S.down(()=> {Player.playerAction("move", window.spd)})
+kd.A.down(()=> {Player.playerAction("rotate", window.spd / window.rotDiv)})
+kd.D.down(()=> {Player.playerAction("rotate", -window.spd / window.rotDiv)})
 kd.run(function(){kd.tick()})
 update()
 console.log("achieved with MazeSrc\n\nepic Half-Life reference")
