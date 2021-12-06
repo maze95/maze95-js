@@ -17,5 +17,5 @@ export const moveOut = () => {
 moveOut()
 
 export const isInRange = (val, low, high) => {
-    if (val < high && val > low) return true
+  if (val < high && val > low) { return true } else { return false }
 }
