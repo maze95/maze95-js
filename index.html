@@ -3,23 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content='Recreation of the Windows 95 "3D Maze" screensaver in JavaScript using Three.js. Randomly generated mazes with fully implemented collision and player movement are in.'>
     <link rel="icon" type="image/png" href="./textures/fin.png">
     <link rel="stylesheet" href="./index.css">
     <title>Maze 95 JS</title>
     <script type="module" src="./maze95.js"></script>
     <meta content="Maze 95 JS" property="og:title">
-    <meta content='Recreation of the Windows 95 "3D Maze" screensaver in JavaScript using Three.js, So far you can traverse a pre-baked maze model with very unfinished collision, either randomly generated mazes or a pool of many pre-baked maze models is planned for the player to explore in the future.' property="og:description">
+    <meta content='Recreation of the Windows 95 "3D Maze" screensaver in JavaScript using Three.js. Randomly generated mazes with fully implemented collision and player movement are in.' property="og:description">
     <meta content="https://maze95.js.org" property="og:url">
     <meta content="./textures/fin.png" property="og:image">
     <link rel="icon" type="image/png" href="./textures/fin.png"/>
-    <meta content="#FDFD3F" data-react-helmet="true" name="theme-color">
+    <meta content="#FDFD3F" name="theme-color">
   </head>
   <body>
     <h1>Maze 95 JS</h1><br>
     <button onclick="location.reload()" id="reset">Reset Game</button><br>
     <button onclick="window.enterFullscreen()" id="reset">Fullscreen Game</button><br>
     <div class="gameCanvas">
-      <canvas id="game" style="border: 55px solid rgb(192, 192, 192);"></canvas>
+      <canvas id="game"></canvas>
     </div>
     <label hidden type="text">Select Level:</label>
     <select hidden id="lvlSel">

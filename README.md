@@ -1,8 +1,17 @@
 # maze95-js
-This is a port / remake of the non interactive classic Windows 95 3D Maze screensaver originally implemented in OpenGL. I am rewriting it with three.js as a playable game which sets it apart from other recreations, I am planning to add a classic game mode where it is like the original and a modified custom mode that includes story elements, new characters and effects.
+This is a port / remake of the non interactive classic Windows 95 3D Maze screensaver originally implemented in OpenGL. I am rewriting it with Three.js as a playable game which sets it apart from other recreations, I am planning to add a classic game mode where it is like the original and a modified custom mode that includes story elements, new characters and effects.
 
 # What is in
-Maze map that is near identical to the original generation of the maze, I have found a maze generator addon for Blender that significantly makes my life easier, movement is fully implemented with an unused player with working collision however it is quite difficult to setup especially with collision boxes.
+Randomly generated mazes with fully implemented collision and player movement.
+
+# Why JavaScript?
+Sure, JavaScript is high level and slow at times but also the language of the web,
+if you ever wanted to play 3D Maze as a game in your browser, this is what you're looking for?
+
+# Why make this project at all?
+This project was mainly started a learning experience for JavaScript and Three.js, I began working on it at a point where my JavaScript skills were still flourishing.
 
 # Bugs
-None, other than unfinished collision of course.
+Sometimes you may spawn out of the map
+Start logo missing due to collision offset bugs
+Smiley face missing due to unfinished level loading and ending code + not being sure how random placement would work.

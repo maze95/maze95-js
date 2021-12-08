@@ -1,9 +1,11 @@
 import * as THREE from './game/three.module.js' // Maze 95 JS, now in 3D!
 import * as MazeGen from "./game/generation.js"
 import * as Utils from "./game/utils.js"
-import * as Player from "./game/player_controller.js" // player code
-import "./game/keydrown.min.js" // input
-import { ceilingMat, floorMat } from './textures/textures.js'
+import * as Player from "./game/player_controller.js"
+import "./game/input.js" // script for user input
+
+import { ceilingMat, floorMat } from "./textures/textures.js"
+
 import { startObj } from "./game/object_defines.js" // object
 
 window.widescreen = false
@@ -21,11 +23,8 @@ if (widescreen) {
 }
 
 window.enterFullscreen = () => {
-  document.getElementById("game").style = null
   document.getElementById("game").requestFullscreen()
 }
-
-if (window.widescreen) document.getElementById("game").style = null
 
 //Dynamic scaling for widescreen
 window.addEventListener('resize', () =>
@@ -89,10 +88,10 @@ function update() {
   renderer.render(scene, camera)
 }
 
-kd.W.down(()=> {Player.playerAction("move", -window.spd)})
-kd.S.down(()=> {Player.playerAction("move", window.spd)})
-kd.A.down(()=> {Player.playerAction("rotate", window.spd / window.rotDiv)})
-kd.D.down(()=> {Player.playerAction("rotate", -window.spd / window.rotDiv)})
-kd.run(function(){kd.tick()})
+if (window.playerInput.uniUpDown) { Player.playerAction("move", -window.spd) }
+if (window.playerInput.uniDownDown) { Player.playerAction("move", window.spd) }
+if (window.playerInput.uniLeftDown) { Player.playerAction("rotate", window.spd / window.rotDiv) }
+if (window.playerInput.uniRightDown) { Player.playerAction("rotate", -window.spd / window.rotDiv) }
+
 update()
 console.log("achieved with MazeSrc\n\nepic Half-Life reference")
