@@ -25,21 +25,21 @@ window.enterFullscreen = () => {
   document.getElementById("game").requestFullscreen()
 }
 
-if (widescreen) document.getElementById("game").style = null
+if (window.widescreen) document.getElementById("game").style = null
 
 //Dynamic scaling for widescreen
 window.addEventListener('resize', () =>
 {
-  if (widescreen) {
-    // Update sizes
+  if (window.widescreen) {
+    // update sizes
     const widewidth = window.innerWidth
     const wideheight = window.innerHeight
 
-      // Update camera
+    // update camera
     camera.aspect = width / height
     camera.updateProjectionMatrix()
 
-      // Update renderer
+    // update renderer
     renderer.setSize(widewidth, wideheight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   }
@@ -58,8 +58,7 @@ Player.pObj.position.y = -3
 Player.pObj.position.z = -25
 
 MazeGen.make_maze()
-// scene.add(faceObj)
-// scene.add(startObj)
+
 amb = new THREE.AmbientLight(0xffffff, 2)
 scene.add(amb)
 
@@ -74,7 +73,7 @@ ceiling.position.y = 9
 scene.add(ceiling)
 
 // objects
-scene.add(startObj)
+// scene.add(startObj)
 
 Utils.moveOut()
 
