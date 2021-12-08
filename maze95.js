@@ -6,7 +6,7 @@ import "./game/keydrown.min.js" // input
 import { ceilingMat, floorMat } from './textures/textures.js'
 import { startObj } from "./game/object_defines.js" // object
 
-const widescreen = false
+window.widescreen = false
 export const width = 640
 export const height = 480
 export const renderer = new THREE.WebGLRenderer({
@@ -58,8 +58,8 @@ Player.pObj.position.y = -3
 Player.pObj.position.z = -25
 
 MazeGen.make_maze()
-//scene.add(faceObj)
-scene.add(startObj)
+// scene.add(faceObj)
+// scene.add(startObj)
 amb = new THREE.AmbientLight(0xffffff, 2)
 scene.add(amb)
 
