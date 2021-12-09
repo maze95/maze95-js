@@ -31,5 +31,5 @@
     "background_color": "#018282",
     "display": "fullscreen",
     "orientation": "landscape",
-    "start_url": "/canvas-only.html"
+    "start_url": "/full.html"
 }
