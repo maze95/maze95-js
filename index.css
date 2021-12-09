@@ -17,7 +17,7 @@ h1 {
 }
 
 a {
-    color: rgb(255, 255, 50);
+    color: white;
     font-size: 20px;
 }
 
@@ -28,15 +28,10 @@ label, p, pre {
 
 button {
     background-image: url("textures/button.png");
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
     background-size: cover;
     font-family: 'ms-sans-serif';
-}
-
-#reset, #fullscreenbtn {
     font-size: 17px;
+    height: 28px;
 }
 
 select {
@@ -58,8 +53,4 @@ select {
     left: 60px;
     font-size: 30px;
     color: white;
-}
-
-#header {
-    font-size: 30px;
 }

@@ -1,0 +1,37 @@
+{
+    "name": "Maze 95 JS",
+    "short_name": "Maze 95 JS",
+    "icons": [
+        {
+          "src": "textures/fin.png",
+          "sizes": "128x128",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "textures/finbig.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+
+        {
+          "src": "textures/fin.png",
+          "sizes": "128x128",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "textures/finbig.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "maskable"
+        }
+    ],
+    "theme_color": "#ffff00",
+    "background_color": "#018282",
+    "display": "fullscreen",
+    "orientation": "portrait",
+    "start_url": "./",
+    "scope": "."
+}

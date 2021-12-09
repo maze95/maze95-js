@@ -2,7 +2,7 @@ import * as THREE from './game/three.module.js' // Maze 95 JS, now in 3D!
 import * as MazeGen from "./game/generation.js"
 import * as Utils from "./game/utils.js"
 import * as Player from "./game/player_controller.js"
-import "./game/input.js" // script for user input
+import "./game/keydrown.min.js"
 
 import { ceilingMat, floorMat } from "./textures/textures.js"
 
@@ -88,10 +88,11 @@ function update() {
   renderer.render(scene, camera)
 }
 
-if (window.playerInput.uniUpDown) { Player.playerAction("move", -window.spd) }
-if (window.playerInput.uniDownDown) { Player.playerAction("move", window.spd) }
-if (window.playerInput.uniLeftDown) { Player.playerAction("rotate", window.spd / window.rotDiv) }
-if (window.playerInput.uniRightDown) { Player.playerAction("rotate", -window.spd / window.rotDiv) }
+kd.W.down(()=> {Player.playerAction("move", -window.spd)})
+kd.S.down(()=> {Player.playerAction("move", window.spd)})
+kd.A.down(()=> {Player.playerAction("rotate", window.spd / window.rotDiv)})
+kd.D.down(()=> {Player.playerAction("rotate", -window.spd / window.rotDiv)})
+kd.run(function(){kd.tick()})
 
 update()
 console.log("achieved with MazeSrc\n\nepic Half-Life reference")
