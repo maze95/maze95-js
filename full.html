@@ -21,6 +21,24 @@
         <link rel="manifest" href="manifest2.json">
     </head>
     <body>
-        <canvas id="game"></canvas>
+        <div id="fullCanvas">
+            <canvas id="game" style="background-size: cover;"></canvas>
+        </div>
     </body>
+
+    <style>
+        #fullCanvas {
+          position: fixed; 
+          top: 0; 
+          left: 0;
+            
+          width: 100vw;
+          height: 100vh;
+          background-size: cover;
+            
+          image-rendering: pixelated;
+          image-rendering: -moz-crisp-edges;
+          image-rendering: crisp-edges;
+        }
+    </style>
 </html>

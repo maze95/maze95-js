@@ -9,8 +9,9 @@ import { ceilingMat, floorMat } from "./textures/textures.js"
 import { startObj } from "./game/object_defines.js" // object
 
 window.widescreen = false
-export const width = 640
-export const height = 480
+let width = 640
+let height = 480
+
 export const renderer = new THREE.WebGLRenderer({
   canvas: document.querySelector('#game'),
   antialias: false
@@ -21,9 +22,19 @@ if (widescreen) {
 } else {
   renderer.setSize(width, height)
 }
+const camera = new THREE.PerspectiveCamera(60,width/height)
 
-window.enterFullscreen = () => {
-  document.getElementById("game").requestFullscreen()
+if (window.location.href.includes("full")) {
+  window.widescreen = true
+  // update sizes
+  width = window.innerWidth
+  height = window.innerHeight
+  // update camera
+  camera.aspect = width / height
+  camera.updateProjectionMatrix()
+  // update renderer
+  renderer.setSize(width, height)
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 }
 
 //Dynamic scaling for widescreen
@@ -31,23 +42,21 @@ window.addEventListener('resize', () =>
 {
   if (window.widescreen) {
     // update sizes
-    const widewidth = window.innerWidth
-    const wideheight = window.innerHeight
-
+    width = window.innerWidth
+    height = window.innerHeight
     // update camera
     camera.aspect = width / height
     camera.updateProjectionMatrix()
 
     // update renderer
-    renderer.setSize(widewidth, wideheight)
+    renderer.setSize(width, height)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   }
 })
 
-if ('ontouchstart' in document.documentElement) window.location.href = "./canvas-only.html" // if mobile
+if ('ontouchstart' in document.documentElement && !window.location.href.includes("full")) window.location.href = "./full.html" // if mobile
 
 export const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(60,width/height)
 scene.add(Player.pObj)
 scene.add(camera)
 

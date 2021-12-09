@@ -21,15 +21,8 @@
   </head>
   <body>
     <h1>Maze 95 JS</h1><br>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-        })
-      }
-    </script>
     <button onclick="location.reload()">Reset Game</button><br>
-    <button onclick="window.enterFullscreen()">Fullscreen Game</button><br>
+    <button onclick='document.getElementById("game").requestFullscreen()'>Fullscreen Game</button><br>
     <div class="gameCanvas">
       <canvas id="game"></canvas>
     </div>
