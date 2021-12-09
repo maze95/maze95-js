@@ -16,10 +16,11 @@
     <meta content="./textures/fin.png" property="og:image">
     <meta content="#FDFD3F" name="theme-color">
 
-    <link rel="icon" type="image/png" href="./textures/fin.png"/>
     <link rel="apple-touch-icon" href="./textures/fin.png">
     <link rel="manifest" href="manifest.json">
-
+  </head>
+  <body>
+    <h1>Maze 95 JS</h1><br>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -27,9 +28,6 @@
         })
       }
     </script>
-  </head>
-  <body>
-    <h1>Maze 95 JS</h1><br>
     <button onclick="location.reload()">Reset Game</button><br>
     <button onclick="window.enterFullscreen()">Fullscreen Game</button><br>
     <div class="gameCanvas">
@@ -45,10 +43,5 @@
     </pre>
     <h2>Special Thanks To:</h2>
     <a href="https://luphoria.com/nmjs/index.html">luphoria's Namco Museum JS for Three.js grasping & collision</a><br>
-    <h2>
-      Libraries used:<br />
-      Three.js<br />
-      Keydrown
-    </h2>
   </body>
 </html>

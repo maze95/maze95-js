@@ -30,6 +30,6 @@
     "theme_color": "#ffff00",
     "background_color": "#018282",
     "display": "fullscreen",
-    "orientation": "portrait",
-    "start_url": "/"
+    "orientation": "landscape",
+    "start_url": "/canvas-only.html"
 }

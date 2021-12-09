@@ -34,19 +34,6 @@ button {
     height: 28px;
 }
 
-select {
-    background-image: url("textures/button.png");
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    -o-background-size: cover;
-    background-size: cover;
-    font-family: 'ms-sans-serif';
-}
-
-.gameCanvas {
-    position: relative;
-}
-
 #title {
     position: absolute;
     top: 60px;

@@ -44,6 +44,8 @@ window.addEventListener('resize', () =>
   }
 })
 
+if ('ontouchstart' in document.documentElement) window.location.href = "./canvas-only.html" // if mobile
+
 export const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(60,width/height)
 scene.add(Player.pObj)
