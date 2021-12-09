@@ -32,6 +32,5 @@
     "background_color": "#018282",
     "display": "fullscreen",
     "orientation": "portrait",
-    "start_url": "./",
-    "scope": "."
+    "start_url": "https://maze95.js.org/"
 }
