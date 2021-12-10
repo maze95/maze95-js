@@ -33,6 +33,13 @@
         <link href="textures/splashscreens/ipadpro2_splash.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
     </head>
     <body>
+        <script>
+            if ('serviceWorker' in navigator) {
+              navigator.serviceWorker.register('/sw.js') // as it turns out, the whole service worker situation was
+              // just Google Chrome Lighthouse being a bi- hacky little thing just because of some storage related
+              // options or something.
+            }
+        </script>
         <div id="fullCanvas">
             <div id="mobileControls" style="margin-left: 10px; z-index: 3; position: absolute;">
                 <h1 style="color: yellow;">WIP</h1>
@@ -42,6 +49,9 @@
     </body>
 
     <style>
+        body {
+            background-color: black;
+        }
         #fullCanvas {
           position: fixed; 
           top: 0; 

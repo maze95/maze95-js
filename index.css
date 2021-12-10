@@ -1,6 +1,7 @@
 @font-face {
     font-family: ms-sans-serif;
     src: url('game/font/ms-sans-serif.otf');
+    font-display: swap;
 }
 
 body {

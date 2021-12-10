@@ -50,11 +50,16 @@
     <select hidden id="lvlSel">
       <option value="maze">Maze</option>
     </select hidden>
-    <h2>Known Bugs:</h2>
-    <pre>
-      You will sometimes spawn outside of the map.
-    </pre>
-    <h2>Special Thanks To:</h2>
-    <a href="https://luphoria.com/nmjs/index.html">luphoria's Namco Museum JS for Three.js grasping & collision</a><br>
+    <button onclick="document.getElementById('credits').hidden = !document.getElementById('credits').hidden">Toggle Extra Info</button>
+    <div hidden id="credits">
+      <h2>Known Bugs:</h2>
+      <pre>
+        You will sometimes spawn outside of the map, this will be fixed in a later update.
+      </pre>
+      <h2>Credits:</h2>
+      <a href="https://luphoria.com/nmjs/index.html">luphoria and his Namco Museum JS for Three.js grasping & collision help</a><br>
+      <a href="https://threejs.org">Three.js</a>
+      <a href="https://jeremyckahn.github.io/keydrown/">Keydrown</a>
+    </div>
   </body>
 </html>
