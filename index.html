@@ -4,11 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content='Recreation of the Windows 95 "3D Maze" screensaver in JavaScript using Three.js. Randomly generated mazes with fully implemented collision and player movement are in.'>
-    <link rel="icon" type="image/png" href="./textures/fin.png">
+    <link rel="icon" type="image/png" href="./textures/icons/apple-icon-180.png">
 
-    <title>Maze 95 JS</title>
-    <link rel="stylesheet" href="./index.css">
     <script type="module" src="./maze95.js"></script>
+    <title>Maze 95 JS</title>
 
     <meta content="Maze 95 JS" property="og:title">
     <meta content='Recreation of the Windows 95 "3D Maze" screensaver in JavaScript using Three.js. Randomly generated mazes with fully implemented collision and player movement are in.' property="og:description">
@@ -16,10 +15,30 @@
     <meta content="./textures/fin.png" property="og:image">
     <meta content="#FDFD3F" name="theme-color">
 
-    <link rel="apple-touch-icon" href="./textures/fin.png">
+    <link rel="apple-touch-icon" href="./textures/icons/apple-icon-180.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
+
+    <link href="splashscreens/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/iphoneplus_splash.png" media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/iphonex_splash.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/iphonexr_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/iphonexsmax_splash.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/ipad_splash.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/ipadpro1_splash.png" media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/ipadpro3_splash.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
+    <link href="textures/splashscreens/ipadpro2_splash.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
   </head>
   <body>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js') // as it turns out, the whole service worker situation was
+        // just Google Chrome Lighthouse being a bi- hacky little thing just because of some storage related
+        // options or something.
+      }
+    </script>
     <h1>Maze 95 JS</h1><br>
     <button onclick="location.reload()">Reset Game</button><br>
     <button onclick='document.getElementById("game").requestFullscreen()'>Fullscreen Game</button><br>

@@ -12,6 +12,6 @@ if you ever wanted to play 3D Maze as a game in your browser, this is what you'r
 This project was mainly started a learning experience for JavaScript and Three.js, I began working on it at a point where my JavaScript skills were still flourishing.
 
 # Bugs
-Sometimes you may spawn out of the map
-Start logo missing due to collision offset bugs
-Smiley face missing due to unfinished level loading and ending code + not being sure how random placement would work.
+Sometimes you may spawn out of the map,
+start logo missing due to collision offset bugs,
+smiley face missing due to unfinished level loading and ending code + not being sure how random placement would work.

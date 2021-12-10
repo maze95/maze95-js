@@ -1,7 +1,7 @@
 {
   "theme_color": "#fff000",
   "background_color": "#018281",
-  "orientation": "landscape",
+  "orientation": "portrait",
   "display": "fullscreen",
   "start_url": "/full.html",
   "name": "Maze 95 JS",
