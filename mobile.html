@@ -7,7 +7,6 @@
     <link rel="icon" type="image/png" href="./textures/icons/apple-icon-180.png">
 
     <script type="module" src="./maze95.js"></script>
-    <link rel="stylesheet" href="./index.css">
     <title>Maze 95 JS</title>
 
     <meta content="Maze 95 JS" property="og:title">
@@ -19,7 +18,7 @@
     <link rel="apple-touch-icon" href="./textures/icons/apple-icon-180.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifestm.json">
 
     <link href="textures/splashscreens/iphone5_splash.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
     <link href="textures/splashscreens/iphone6_splash.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" rel="apple-touch-startup-image" />
@@ -34,31 +33,70 @@
   </head>
   <body>
     <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
-      }
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js')
+        }
     </script>
-    <canvas hidden id="fullCanvas"></canvas>
-    <main id="content">
-      <h1>Maze 95 JS</h1><br>
-      <button onclick="location.reload()">Reset Game</button><br>
-      <button onclick='document.getElementById("game").requestFullscreen()'>Fullscreen Game</button><br>
-      <div class="gameCanvas" style="margin-top: 8px;">
+    <div id="cpos">
         <canvas id="game"></canvas>
-      </div>
-      <label hidden type="text">Select Level:</label>
-      <select hidden id="lvlSel">
-        <option value="maze">Maze</option>
-      </select hidden>
-      <button onclick="document.getElementById('credits').hidden = !document.getElementById('credits').hidden">Toggle Extra Info</button>
-      <div hidden id="credits">
-        <h2>Known Bugs:</h2>
-        <pre>You will sometimes spawn outside of the map, this will be fixed in a later update.</pre>
-        <h2>Credits:</h2>
-        <a href="https://luphoria.com/nmjs/index.html">luphoria and his Namco Museum JS for Three.js grasping & collision help</a><br>
-        <a href="https://threejs.org">Three.js</a><br>
-        <a href="https://jeremyckahn.github.io/keydrown/">Keydrown</a>
-      </div>
-    </main>
+    </div>
+    <div id="controls">
+        <div id="input" style="justify-content: center; display: block;">
+            <button id="upBtn">Forward</button><br>
+            <button style="margin-top: 105px; margin-left: -100px;" id="leftBtn">Left</button>
+            <button style="margin-top: 225px;" id="backBtn">Back</button>
+            <button style="margin-top: 105px; margin-left: 113px;" id="rightBtn">Right</button>
+        </div>
+    </div>
   </body>
+  <style>
+    @font-face {
+        font-family: ms-sans-serif;
+        src: url('game/font/ms-sans-serif.otf');
+        font-display: swap;
+    }
+
+    body {
+        background-color: black;
+    }
+    #cpos {
+        position: fixed;
+        top: 0;
+        left: 0;
+
+        width: 100vw;
+        height: 50vh;
+    }
+    #controls {
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgb(200,200,200);
+        width: 100vw;
+        height: 50vh;
+        margin-top: 50vh;
+        background-image: url("textures/dpad.png");
+        background-size: cover;
+    }
+    #input {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    button {
+        font-family: 'ms-sans-serif';
+        font-size: 3vh;
+        background-image: url("textures/button.png");
+        background-size: cover;
+        position: absolute;
+        width: 14vh;
+        height: 14vh;
+        margin-top: 5px;
+        margin-left: 10px;
+
+        user-select: none; /* supported by Chrome and Opera */
+        -webkit-user-select: none; /* Safari */
+        -moz-user-select: none; /* Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+    }
+  </style>
 </html>
