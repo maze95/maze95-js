@@ -9,6 +9,7 @@ const wallTex = new THREE.TextureLoader().load(`${texPath}wall.png`, function ( 
   texture.repeat.set(1,1.2)
 })
 wallTex.magFilter = THREE.NearestFilter
+wallTex.generateMipmaps = false
 export const wallMat = new THREE.MeshBasicMaterial({map: wallTex})
 
 const ceilingTex = new THREE.TextureLoader().load(`${texPath}ceiling.png`, function ( texture ) {
@@ -17,6 +18,7 @@ const ceilingTex = new THREE.TextureLoader().load(`${texPath}ceiling.png`, funct
   texture.repeat.set(120,100)
 })
 ceilingTex.magFilter = THREE.NearestFilter
+ceilingTex.generateMipmaps = false
 export const ceilingMat = new THREE.MeshBasicMaterial({map: ceilingTex})
 
 const floorTex = new THREE.TextureLoader().load(`${texPath}floor.png`, function ( texture ) {
@@ -25,13 +27,16 @@ const floorTex = new THREE.TextureLoader().load(`${texPath}floor.png`, function 
   texture.repeat.set(50,50)
 })
 floorTex.magFilter = THREE.NearestFilter
+floorTex.generateMipmaps = false
 export const floorMat = new THREE.MeshBasicMaterial({map: floorTex})
 
 
 const faceTexture = new THREE.TextureLoader().load("./textures/fin.png")
 faceTexture.magFilter = THREE.NearestFilter
+faceTexture.generateMipmaps = false
 export const face = new THREE.MeshStandardMaterial({map: faceTexture, transparent: true, opacity: 0.65})
 
 const startTexture = new THREE.TextureLoader().load("./textures/start.png")
 startTexture.magFilter = THREE.NearestFilter
+startTexture.generateMipmaps = false
 export const start = new THREE.MeshBasicMaterial({map: startTexture, transparent: true, opacity: 0.6})
