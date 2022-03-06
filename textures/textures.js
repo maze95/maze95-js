@@ -1,37 +1,37 @@
-import * as THREE from '../game/three.module.js'
+import * as THREE from '../mazesrc/three.module.js'
 
-let texPath = "./textures/"
-if (!window.location.href.includes("localhost") || !window.location.href.includes("127.0.0.1")) texPath = "https://maze95.js.org/textures/"
-
-const wallTex = new THREE.TextureLoader().load(`${texPath}wall.png`, function ( texture ) {
+const wall_tex = new THREE.TextureLoader().load("./textures/wall.png", (texture) => {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,-0.02)
   texture.repeat.set(1,1.2)
 })
-wallTex.magFilter = THREE.NearestFilter
-export const wallMat = new THREE.MeshBasicMaterial({map: wallTex})
+wall_tex.minFilter = THREE.NearestFilter
+wall_tex.magFilter = THREE.NearestFilter
+export const wall = new THREE.MeshBasicMaterial({map: wall_tex})
 
-const ceilingTex = new THREE.TextureLoader().load(`${texPath}ceiling.png`, function ( texture ) {
+const ceiling_tex = new THREE.TextureLoader().load("./textures/ceiling.png", (texture) => {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,0)
   texture.repeat.set(120,100)
 })
-ceilingTex.magFilter = THREE.NearestFilter
-export const ceilingMat = new THREE.MeshBasicMaterial({map: ceilingTex})
+ceiling_tex.minFilter = THREE.NearestFilter
+ceiling_tex.magFilter = THREE.NearestFilter
+export const ceiling = new THREE.MeshBasicMaterial({map: ceiling_tex})
 
-const floorTex = new THREE.TextureLoader().load(`${texPath}floor.png`, function ( texture ) {
+const floor_tex = new THREE.TextureLoader().load("./textures/floor.png", (texture) => {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping
   texture.offset.set(0,0)
   texture.repeat.set(50,50)
 })
-floorTex.magFilter = THREE.NearestFilter
-export const floorMat = new THREE.MeshBasicMaterial({map: floorTex})
+floor_tex.minFilter = THREE.NearestFilter
+floor_tex.magFilter = THREE.NearestFilter
+export const floor = new THREE.MeshBasicMaterial({map: floor_tex})
 
-
-const faceTexture = new THREE.TextureLoader().load("./textures/fin.png")
+/*const faceTexture = new THREE.TextureLoader().load("./textures/fin.png") // unnecessary for the time being
 faceTexture.magFilter = THREE.NearestFilter
-export const face = new THREE.MeshStandardMaterial({map: faceTexture, transparent: true, opacity: 0.65})
+export const face = new THREE.MeshStandardMaterial({map: faceTexture, transparent: true, opacity: 0.65})*/
 
-const startTexture = new THREE.TextureLoader().load("./textures/start.png")
-startTexture.magFilter = THREE.NearestFilter
-export const start = new THREE.MeshBasicMaterial({map: startTexture, transparent: true, opacity: 0.6})
+const start_tex = new THREE.TextureLoader().load("./textures/start.png")
+start_tex.minFilter = THREE.NearestFilter
+start_tex.magFilter = THREE.NearestFilter
+export const start = new THREE.MeshBasicMaterial({map: start_tex, transparent: true, opacity: 0.6})

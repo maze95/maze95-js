@@ -1,12 +1,12 @@
 import * as THREE from './three.module.js'
-import { scene } from "../maze95.js"
-import { wallMat } from "../textures/textures.js"
+import { scene } from "./main.js"
+import { wall } from "../textures/textures.js"
 
-let collisionMesh = []
-export { collisionMesh }
+let collision_mesh = []
+export { collision_mesh }
 
 // Huge credits to https://github.com/johansatge/three-maze for the code to generate the maze.
-const generateMaze = (size) => {
+const generate_maze = (size) => {
     var cN = [[0,0],[0,0],[0,0],[0,0]]
     var cx
     var cy
@@ -90,7 +90,7 @@ export const make_maze = () => {
     let side = 31
     let thicknessXZ = 20
     let thicknessY = 25
-    let new_map = generateMaze(side)
+    let new_map = generate_maze(side)
     for (var x = side; x > 0; x -= 1)
     {
         for (var y = 1; y < side + 1; y += 1)
@@ -100,9 +100,9 @@ export const make_maze = () => {
             {
                 // Generates the mesh
                 let wall_geometry = new THREE.BoxGeometry(thicknessXZ, thicknessY, thicknessXZ, 1, 1, 1)
-                new_map[x][y] = new THREE.Mesh(wall_geometry, wallMat)
+                new_map[x][y] = new THREE.Mesh(wall_geometry, wall)
                 new_map[x][y].position.set(x * thicknessXZ - ((side * thicknessXZ) / 2), 0, y * 20 - ((side * thicknessXZ) / 2))
-                collisionMesh.push(new_map[x][y])
+                collision_mesh.push(new_map[x][y])
                 scene.add(new_map[x][y])
             } else { new_map[x][y] = false }
         }

@@ -1,4 +1,4 @@
-export const collisionCheck = (a, d) => { //Syntax: checkCollision(player, wall)
+export const collision_check = (a, d) => {
     let b1 = a.position.y - a.geometry.parameters.height / 2
     let t1 = a.position.y + a.geometry.parameters.height / 2
     let r1 = a.position.x + a.geometry.parameters.width / 2

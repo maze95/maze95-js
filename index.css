@@ -1,44 +1,10 @@
-@font-face {
-    font-family: ms-sans-serif;
-    src: url('game/font/ms-sans-serif.otf');
-    font-display: swap;
+html, body {
+    background-color: black;
+    position: fixed;
+    margin: 0;
 }
 
-body {
-    color: white;
-    background-color: #018281;
-    font-family: 'ms-sans-serif';
-    display: grid;
-    place-items: center;
-    text-align: center;
-}
-
-h1 {
-    color: yellow;
-}
-
-a {
-    color: white;
-    font-size: 20px;
-}
-
-label, p, pre {
-    font-family: 'ms-sans-serif';
-    font-size: 20px;
-}
-
-button {
-    background-image: url("textures/button.png");
-    background-size: cover;
-    font-family: 'ms-sans-serif';
-    font-size: 17px;
-    height: 28px;
-}
-
-#title {
-    position: absolute;
-    top: 60px;
-    left: 60px;
-    font-size: 30px;
-    color: white;
+#game {
+    width: 100vw;
+    height: 100vh;
 }
