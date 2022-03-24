@@ -1,6 +1,6 @@
 import { MazeSrc } from "./mazesrc/main.js"
 import { floor, ceiling, start } from "./textures/textures.js"
-import * as MazeGen from "./mazesrc/generation.js" // code for generating maze
+import * as MazeGen from "./maze95-js/generation.js" // code for generating maze
 
 let startLogo = null
 

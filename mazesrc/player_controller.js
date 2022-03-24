@@ -1,6 +1,6 @@
 import * as THREE from './three.module.js'
 import { collision_check } from "./surface.js"
-import { collision_mesh } from "./generation.js"
+import { collision_mesh } from "../maze95-js/generation.js"
 
 export class Player {
     constructor() {

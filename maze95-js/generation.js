@@ -1,5 +1,5 @@
-import * as THREE from './three.module.js'
-import { scene } from "./main.js"
+import * as THREE from '../mazesrc/three.module.js'
+import { scene } from "../mazesrc/main.js"
 import { wall } from "../textures/textures.js"
 
 let collision_mesh = []
