@@ -1,4 +1,11 @@
 # maze95-js
+
+# This is no longer being worked on!
+
+I started working on this as a side project to sm64js, something to enhance my JavaScript skills with, but now that I've left sm64js I don't really have a reason to learn JavaScript anymore.
+
+# Description
+
 This is a port / authentic remake of the non interactive classic Windows 95 3D Maze screensaver originally implemented in OpenGL made into an interactive web game experience. I am recreating it with my own little JS game engine called MazeSrc, built on top of Three.js.
 
 You can play the game [here]("https://maze95.js.org/new_engine")
